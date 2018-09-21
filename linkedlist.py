@@ -25,6 +25,12 @@ class _List(collections.abc.Collection):
   # inefficient for linked lists.
   __slots__ = ()
 
+  def __contains__(self, item):
+    for x in self:
+      if x == item:
+        return True
+    return False
+
 
 def isList(x):
   """Return True if x is nil or a Pair, otherwise False."""
@@ -34,9 +40,6 @@ def isList(x):
 class _NilType(_List):
   """The singleton class for nil."""
   __slots__ = ()
-
-  def __contains__(self, item):
-    return False
 
   def __iter__(self):
     return self
@@ -52,9 +55,27 @@ class _NilType(_List):
 nil = _NilType()
 
 
-class Pair(_List, collections.namedtuple('_Pair', 'car cdr')):
+class Pair(_List):
   """The linked list node.
 
   If this class is used to form an improper list, some of its methods will throw
   exceptions."""
-  __slots__ = ()
+  __slots__ = 'car', 'cdr', '_len'
+
+  def __init__(self, car, cdr):
+    self.car = car
+    self.cdr = cdr
+    try:
+      self._len = len(cdr) + 1
+    except (ValueError, TypeError):
+      self._len = None
+
+  def __iter__(self):
+    while self:
+      yield self.car
+      self = self.cdr
+
+  def __len__(self):
+    if self._len is None:
+      raise ValueError('Attempt to get length of an improper list.')
+    return self._len

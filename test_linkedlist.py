@@ -3,7 +3,14 @@
 
 #TODO: Implement features one at a time, in both nil and Pair.
 
+import pytest
+
 import linkedlist
+
+basicList = linkedlist.Pair(
+  0, linkedlist.Pair(1, linkedlist.Pair(2, linkedlist.nil)),
+)
+improperList = linkedlist.Pair(11, 93)
 
 
 def test_isList():
@@ -35,4 +42,30 @@ class TestPair:
 
   def test_isList(self):
     """A Pair is a list."""
-    assert linkedlist.isList(linkedlist.Pair(None, linkedlist.nil)) is True
+    assert linkedlist.isList(basicList) is True
+
+  def test_attributes(self):
+    """Has a car and cdr."""
+    assert improperList.car == 11
+    assert improperList.cdr == 93
+
+  def test_iter(self):
+    """We can iterate through a Pair."""
+    it = iter(basicList)
+    assert next(it) == 0
+    assert next(it) == 1
+    assert next(it) == 2
+
+  def test_contains(self):
+    """'in' operator works."""
+    assert 2 in basicList
+    assert not (3 in basicList)
+
+  def test_len(self):
+    """len() works."""
+    assert len(basicList) == 3
+
+  def test_badLen(self):
+    """len() raises an exception for an improper list."""
+    with pytest.raises(ValueError):
+      len(linkedlist.Pair(None, None))

@@ -14,9 +14,17 @@ Traditional Python lists require O(n*log(n)), because some new elements will
 trigger a memory reallocation (and therefore a copy).
 """
 
+import collections
+
 
 class _List:
   """The abstract base class for nil and Pair."""
+  # TODO:
+  # Inherit from Collection
+  # Inherit from Reversible.
+  # Implement Sequence methods. We can't inherit from Sequence, it's inefficient
+  # for linked lists.
+  __slots__ = ()
 
 
 def isList(x):
@@ -26,6 +34,15 @@ def isList(x):
 
 class _NilType(_List):
   """The class for nil, which is the singleton empty list."""
+  __slots__ = ()
 
 
 nil = _NilType()
+
+
+class Pair(_List, collections.namedtuple('_Pair', 'car cdr')):
+  """The linked list node.
+
+  If this class is used to form an improper list, some of its methods will throw
+  exceptions."""
+  __slots__ = ()

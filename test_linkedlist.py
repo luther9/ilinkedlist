@@ -13,6 +13,13 @@ def test_isList():
 
 class TestNil:
 
-  def test_isNil(self):
-    """isNil(nil) is True."""
+  def test_isList(self):
+    """isList(nil) is True."""
     assert linkedlist.isList(linkedlist.nil) is True
+
+
+class TestPair:
+
+  def test_isList(self):
+    """A Pair is a list."""
+    assert linkedlist.isList(linkedlist.Pair(None, linkedlist.nil)) is True

@@ -6,6 +6,13 @@
 import linkedlist
 
 
-def test_isListFalse():
+def test_isList():
   """isList returns False for a non-list."""
   assert linkedlist.isList(None) is False
+
+
+class TestNil:
+
+  def test_isNil(self):
+    """isNil(nil) is True."""
+    assert linkedlist.isList(linkedlist.nil) is True

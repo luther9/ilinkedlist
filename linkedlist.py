@@ -5,7 +5,7 @@
 
 A linked list is defined as either nil or a Pair whose cdr is a linked list.
 Linked lists are hashable. Note that it is possible to create an improper list
-by passing a non-list as the second argument to Pair. This will cause some
+by passing a non-list as the second argument to Pair. This will cause some Pair
 methods to raise exceptions.
 
 Linked lists are useful, because they can be built element-by-element, in O(n).
@@ -14,13 +14,18 @@ Traditional Python lists require O(n*log(n)), because some new elements will
 trigger a memory reallocation (and therefore a copy).
 """
 
-# TODO: Make a _List abstract class, implemented by both nil and Pair.
-
 
 class _List:
-  pass
+  """The abstract base class for nil and Pair."""
 
 
 def isList(x):
   """Return True if x is nil or a Pair, otherwise False."""
   return isinstance(x, _List)
+
+
+class _NilType(_List):
+  """The class for nil, which is the singleton empty list."""
+
+
+nil = _NilType()

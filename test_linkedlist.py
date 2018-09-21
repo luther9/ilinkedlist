@@ -17,6 +17,19 @@ class TestNil:
     """isList(nil) is True."""
     assert linkedlist.isList(linkedlist.nil) is True
 
+  def test_contains(self):
+    """nil does't contain anything."""
+    assert not (None in linkedlist.nil)
+
+  def test_iter(self):
+    """nil is an empty iterable."""
+    for x in linkedlist.nil:
+      assert False
+
+  def test_len(self):
+    """nil is empty"""
+    assert len(linkedlist.nil) == 0
+
 
 class TestPair:
 

@@ -17,13 +17,12 @@ trigger a memory reallocation (and therefore a copy).
 import collections
 
 
-class _List:
+class _List(collections.abc.Collection):
   """The abstract base class for nil and Pair."""
   # TODO:
-  # Inherit from Collection
   # Inherit from Reversible.
-  # Implement Sequence methods. We can't inherit from Sequence, it's inefficient
-  # for linked lists.
+  # Implement Sequence methods. We can't inherit from Sequence, because it's
+  # inefficient for linked lists.
   __slots__ = ()
 
 
@@ -33,10 +32,23 @@ def isList(x):
 
 
 class _NilType(_List):
-  """The class for nil, which is the singleton empty list."""
+  """The singleton class for nil."""
   __slots__ = ()
 
+  def __contains__(self, item):
+    return False
 
+  def __iter__(self):
+    return self
+
+  def __next__(self):
+    raise StopIteration
+
+  def __len__(self):
+    return 0
+
+
+# The empty linked list.
 nil = _NilType()
 
 

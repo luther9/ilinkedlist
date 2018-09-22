@@ -57,7 +57,7 @@ class _NilType(_List):
 class Pair(_List):
   """The linked list node.
 
-  If this class is used to form an improper list, some of its methods will throw
+  If this class is used to form an improper list, some of its methods will raise
   exceptions."""
   __slots__ = 'car', 'cdr', '_len'
 
@@ -65,11 +65,15 @@ class Pair(_List):
     self.car = car
     self.cdr = cdr
     try:
-      self._len = len(cdr) + 1
-    except (ValueError, TypeError):
+      self._len = len(cdr) + 1 if isList(cdr) else None
+    except ValueError:
       self._len = None
 
   def __len__(self):
+    """Return the length of the list.
+
+    If the list is improper, raise ValueError.
+    """
     if self._len is None:
       raise ValueError('Attempt to get length of an improper list.')
     return self._len

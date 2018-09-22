@@ -16,15 +16,20 @@ trigger a memory reallocation (and therefore a copy).
 
 import collections
 
-__all__ = 'nil', 'Pair', 'isList'
+__all__ = 'nil', 'Pair', 'fromIter', 'reversed', 'isList'
 
 
 class _List(collections.abc.Collection, collections.abc.Reversible):
   """The abstract base class for nil and Pair."""
   # TODO:
-  # Implement Sequence methods. We can't inherit from Sequence, because it's
-  # inefficient for linked lists.
+  # Implement Sequence methods. We can't inherit from Sequence, because its
+  # concrete methods are inefficient for linked lists.
   __slots__ = ()
+
+  def __iter__(self):
+    while self:
+      yield self.car
+      self = self.cdr
 
   def __contains__(self, item):
     for x in self:
@@ -33,10 +38,7 @@ class _List(collections.abc.Collection, collections.abc.Reversible):
     return False
 
   def __reversed__(self):
-    new = nil
-    for x in self:
-      new = Pair(x, new)
-    return new
+    return reversed(self)
 
 
 def isList(x):
@@ -47,12 +49,6 @@ def isList(x):
 class _NilType(_List):
   """The singleton class for nil."""
   __slots__ = ()
-
-  def __iter__(self):
-    return self
-
-  def __next__(self):
-    raise StopIteration
 
   def __len__(self):
     return 0
@@ -73,15 +69,26 @@ class Pair(_List):
     except (ValueError, TypeError):
       self._len = None
 
-  def __iter__(self):
-    while self:
-      yield self.car
-      self = self.cdr
-
   def __len__(self):
     if self._len is None:
       raise ValueError('Attempt to get length of an improper list.')
     return self._len
+
+
+def reversed(iterable):
+  """Reverse iterable and turn it into a linked list.
+
+  This function is faster than fromIter if you don't want to preserve order.
+  """
+  new = nil
+  for x in iterable:
+    new = Pair(x, new)
+  return new
+
+
+def fromIter(iterable):
+  """Build a linked list from iterable."""
+  return reversed(reversed(iterable))
 
 
 # The empty linked list.

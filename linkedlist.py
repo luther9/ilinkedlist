@@ -24,6 +24,9 @@ class _List(collections.abc.Collection, collections.abc.Reversible):
   # TODO:
   # Implement Sequence methods. We can't inherit from Sequence, because its
   # concrete methods are inefficient for linked lists.
+  # count
+  # index
+  # Implement the equivalents of list methods.
   __slots__ = ()
 
   def __iter__(self):
@@ -39,6 +42,24 @@ class _List(collections.abc.Collection, collections.abc.Reversible):
 
   def __reversed__(self):
     return reversed(self)
+
+  def __getitem__(self, key):
+    """Get the key-th element of the list.
+
+    Negative indexes are only supported for proper lists.
+    """
+    try:
+      i = key + len(self) if key < 0 else key
+    except ValueError:
+      i = key
+    error = IndexError(f'Index out of range: {key}')
+    if i < 0:
+      raise error
+    for x in self:
+      if not i:
+        return x
+      i -= 1
+    raise error
 
 
 def isList(x):

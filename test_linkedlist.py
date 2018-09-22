@@ -2,7 +2,7 @@
 # This program is public domain. See file COPYING for details.
 
 # TODO:
-# Implement features one at a time, in both nil and Pair.
+# Implement features, one at a time, in both nil and Pair.
 
 import pytest
 
@@ -49,6 +49,11 @@ class TestNil:
     """reversed(nil) is nil"""
     assert reversed(linkedlist.nil) is linkedlist.nil
 
+  def test_getitemIndex(self):
+    """Indexing raises IndexError."""
+    with pytest.raises(IndexError):
+      linkedlist.nil[0]
+
 
 class TestPair:
 
@@ -85,3 +90,18 @@ class TestPair:
   def test_reversed(self):
     """Get a reversed list."""
     assert tuple(reversed(basicList)) == (2, 1, 0)
+
+  def test_getitem(self):
+    """Indexing works."""
+    assert basicList[1] == 1
+
+  def test_getitemIndexError(self):
+    """Out-of-range index raises IndexError."""
+    with pytest.raises(IndexError):
+      basicList[100]
+
+  def test_getitemNegative(self):
+    """Negative index."""
+    assert basicList[-3] == 0
+
+  # TODO: Check slicing.

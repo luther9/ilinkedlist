@@ -1,7 +1,9 @@
 # 2018 Luther Thompson
 # This program is public domain. See file COPYING for details.
 
-#TODO: Implement features one at a time, in both nil and Pair.
+# TODO:
+# Constructors: fromIter, fromArgs.
+# Implement features one at a time, in both nil and Pair.
 
 import pytest
 
@@ -37,6 +39,10 @@ class TestNil:
     """nil is empty"""
     assert len(linkedlist.nil) == 0
 
+  def test_reversed(self):
+    """reversed(nil) is nil"""
+    assert reversed(linkedlist.nil) is linkedlist.nil
+
 
 class TestPair:
 
@@ -69,3 +75,7 @@ class TestPair:
     """len() raises an exception for an improper list."""
     with pytest.raises(ValueError):
       len(linkedlist.Pair(None, None))
+
+  def test_reversed(self):
+    """Get a reversed list."""
+    assert tuple(reversed(basicList)) == (2, 1, 0)

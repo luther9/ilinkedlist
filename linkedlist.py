@@ -16,11 +16,12 @@ trigger a memory reallocation (and therefore a copy).
 
 import collections
 
+__all__ = 'nil', 'Pair', 'isList'
 
-class _List(collections.abc.Collection):
+
+class _List(collections.abc.Collection, collections.abc.Reversible):
   """The abstract base class for nil and Pair."""
   # TODO:
-  # Inherit from Reversible.
   # Implement Sequence methods. We can't inherit from Sequence, because it's
   # inefficient for linked lists.
   __slots__ = ()
@@ -30,6 +31,12 @@ class _List(collections.abc.Collection):
       if x == item:
         return True
     return False
+
+  def __reversed__(self):
+    new = nil
+    for x in self:
+      new = Pair(x, new)
+    return new
 
 
 def isList(x):
@@ -49,10 +56,6 @@ class _NilType(_List):
 
   def __len__(self):
     return 0
-
-
-# The empty linked list.
-nil = _NilType()
 
 
 class Pair(_List):
@@ -79,3 +82,7 @@ class Pair(_List):
     if self._len is None:
       raise ValueError('Attempt to get length of an improper list.')
     return self._len
+
+
+# The empty linked list.
+nil = _NilType()

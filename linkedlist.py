@@ -16,7 +16,7 @@ trigger a memory reallocation (and therefore a copy).
 
 import collections
 
-__all__ = 'nil', 'Pair', 'fromIter', 'reversed', 'isList'
+__all__ = 'nil', 'Pair', 'new', 'reversed', 'isList'
 
 
 class _List(collections.abc.Collection, collections.abc.Reversible):
@@ -78,7 +78,7 @@ class Pair(_List):
 def reversed(iterable):
   """Reverse iterable and turn it into a linked list.
 
-  This function is faster than fromIter if you don't want to preserve order.
+  This function is faster than new if you don't want to preserve order.
   """
   new = nil
   for x in iterable:
@@ -86,7 +86,7 @@ def reversed(iterable):
   return new
 
 
-def fromIter(iterable):
+def new(iterable):
   """Build a linked list from iterable."""
   return reversed(reversed(iterable))
 

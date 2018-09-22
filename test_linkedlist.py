@@ -2,18 +2,17 @@
 # This program is public domain. See file COPYING for details.
 
 # TODO:
-# Constructors: fromReversedArgs, fromArgs.
 # Implement features one at a time, in both nil and Pair.
 
 import pytest
 
 import linkedlist
 
-basicList = linkedlist.fromIter((0, 1, 2))
+basicList = linkedlist.new((0, 1, 2))
 improperList = linkedlist.Pair(11, 93)
 
 
-def test_fromIter():
+def test_new():
   """Make a linked list from an iterable."""
   assert tuple(basicList) == (0, 1, 2)
 

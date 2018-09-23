@@ -8,13 +8,15 @@ Linked lists are hashable. Note that it is possible to create an improper list
 by passing a non-list as the second argument to Pair. This will cause some Pair
 methods to raise exceptions.
 
-Linked lists are useful, because they can be built element-by-element, in O(n).
+Linked lists are useful, because they can be built element-by-element in O(n).
 Tuples require O(n^2) due to having to copy the tuple with each new element.
 Traditional Python lists require O(n*log(n)), because some new elements will
 trigger a memory reallocation (and therefore a copy).
 """
 
+import abc
 import collections
+import itertools
 
 __all__ = 'nil', 'Pair', 'new', 'reversed', 'isList'
 
@@ -28,6 +30,10 @@ class _List(collections.abc.Collection, collections.abc.Reversible):
   # index
   # Implement the equivalents of list methods.
   __slots__ = ()
+
+  @abc.abstractmethod
+  def isProper(self):
+    pass
 
   def __iter__(self):
     while self:
@@ -43,23 +49,41 @@ class _List(collections.abc.Collection, collections.abc.Reversible):
   def __reversed__(self):
     return reversed(self)
 
+  def tail(self, i):
+    """Return the list starting after the first i nodes.
+
+    If i is greater than the length of the list, return nil.
+    """
+    while i > 0 and self:
+      self = self.cdr
+      i -= 1
+    return self
+
   def __getitem__(self, key):
     """Get the key-th element of the list.
 
     Negative indexes are only supported for proper lists.
     """
-    try:
-      i = key + len(self) if key < 0 else key
-    except ValueError:
-      i = key
-    error = IndexError(f'Index out of range: {key}')
-    if i < 0:
+    proper = self.isProper()
+    if proper:
+      size = len(self)
+    if isinstance(key, int):
+      i = key + (size if proper and key < 0 else 0)
+      error = IndexError(f'Index out of range: {key}')
+      if i < 0:
+        raise error
+      for x in self:
+        if not i:
+          return x
+        i -= 1
       raise error
-    for x in self:
-      if not i:
-        return x
-      i -= 1
-    raise error
+    if isinstance(key, slice):
+      if proper:
+        s = key.indices(size)
+        if s[1] >= size and s[2] == 1:
+          return self.tail(s[0])
+      return new(itertools.islice(self, key.start, key.stop, key.step))
+    raise TypeError('Index must be int or slice, got {key}')
 
 
 def isList(x):
@@ -74,6 +98,9 @@ class _NilType(_List):
   def __len__(self):
     return 0
 
+  def isProper(self):
+    return True
+
 
 class Pair(_List):
   """The linked list node.
@@ -85,19 +112,23 @@ class Pair(_List):
   def __init__(self, car, cdr):
     self.car = car
     self.cdr = cdr
-    try:
-      self._len = len(cdr) + 1 if isList(cdr) else None
-    except ValueError:
-      self._len = None
+    self._len = len(cdr) + 1 if isList(cdr) and cdr.isProper() else None
 
   def __len__(self):
     """Return the length of the list.
 
     If the list is improper, raise ValueError.
     """
-    if self._len is None:
-      raise ValueError('Attempt to get length of an improper list.')
-    return self._len
+    if self.isProper():
+      return self._len
+    raise ValueError('Attempt to get length of an improper list')
+
+  def __bool__(self):
+    """Don't crash when converting an improper list to bool."""
+    return True
+
+  def isProper(self):
+    return self._len is not None
 
 
 def reversed(iterable):

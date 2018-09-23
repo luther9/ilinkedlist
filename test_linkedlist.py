@@ -12,6 +12,16 @@ basicList = linkedlist.new((0, 1, 2))
 improperList = linkedlist.Pair(11, 93)
 
 
+def assertEqual(a, b):
+  """Assert that 2 iterables are the same type and have the same elements.
+
+  We should be able to delete this function when we implement equality.
+  """
+  assert type(a) is type(b)
+  for x, y in zip(a, b):
+    assert x == y
+
+
 def test_new():
   """Make a linked list from an iterable."""
   assert tuple(basicList) == (0, 1, 2)
@@ -53,6 +63,14 @@ class TestNil:
     """Indexing raises IndexError."""
     with pytest.raises(IndexError):
       linkedlist.nil[0]
+
+  def test_getitemSlice(self):
+    """A slice returns nil."""
+    assert linkedlist.nil[1:3000] is linkedlist.nil
+
+  def test_isProper(self):
+    """nil is a proper list."""
+    assert linkedlist.nil.isProper() is True
 
 
 class TestPair:
@@ -104,4 +122,23 @@ class TestPair:
     """Negative index."""
     assert basicList[-3] == 0
 
-  # TODO: Check slicing.
+  def test_getitemSlice(self):
+    """Slicing works."""
+    assertEqual(basicList[0:2], linkedlist.new((0, 1)))
+
+  def test_getitemSliceOutOfRange(self):
+    """Out of range slice returns nil."""
+    assert basicList[10:2365] is linkedlist.nil
+
+  def test_getitemSliceBig(self):
+    """An oversize slice returns the same list."""
+    assert basicList[-10:20] is basicList
+
+  def test_isProper(self):
+    """Return True only for proper lists."""
+    assert basicList.isProper() is True
+    assert improperList.isProper() is False
+
+  def test_bool(self):
+    """An improper list is truthy."""
+    assert improperList

@@ -142,3 +142,5 @@ class TestPair:
   def test_bool(self):
     """An improper list is truthy."""
     assert improperList
+
+  # TODO: tail with an improper list.

@@ -36,7 +36,7 @@ class _List(collections.abc.Collection, collections.abc.Reversible):
     pass
 
   def __iter__(self):
-    while self:
+    while _isPair(self):
       yield self.car
       self = self.cdr
 
@@ -52,9 +52,10 @@ class _List(collections.abc.Collection, collections.abc.Reversible):
   def tail(self, i):
     """Return the list starting after the first i nodes.
 
-    If i is greater than the length of the list, return nil.
+    If i is greater than the length of the list, return nil (actually the last
+    cdr).
     """
-    while i > 0 and self:
+    while i > 0 and _isPair(self):
       self = self.cdr
       i -= 1
     return self
@@ -103,10 +104,7 @@ class _NilType(_List):
 
 
 class Pair(_List):
-  """The linked list node.
-
-  If this class is used to form an improper list, some of its methods will raise
-  exceptions."""
+  """The linked list node."""
   __slots__ = 'car', 'cdr', '_len'
 
   def __init__(self, car, cdr):
@@ -129,6 +127,10 @@ class Pair(_List):
 
   def isProper(self):
     return self._len is not None
+
+
+def _isPair(x):
+  return isinstance(x, Pair)
 
 
 def reversed(iterable):

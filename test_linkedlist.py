@@ -68,10 +68,6 @@ class TestNil:
     """A slice returns nil."""
     assert linkedlist.nil[1:3000] is linkedlist.nil
 
-  def test_isProper(self):
-    """nil is a proper list."""
-    assert linkedlist.nil.isProper() is True
-
 
 class TestPair:
 
@@ -99,11 +95,6 @@ class TestPair:
   def test_len(self):
     """len() works."""
     assert len(basicList) == 3
-
-  def test_badLen(self):
-    """len() raises an exception for an improper list."""
-    with pytest.raises(ValueError):
-      len(linkedlist.Pair(None, None))
 
   def test_reversed(self):
     """Get a reversed list."""
@@ -133,11 +124,6 @@ class TestPair:
   def test_getitemSliceBig(self):
     """An oversize slice returns the same list."""
     assert basicList[-10:20] is basicList
-
-  def test_isProper(self):
-    """Return True only for proper lists."""
-    assert basicList.isProper() is True
-    assert improperList.isProper() is False
 
   def test_bool(self):
     """An improper list is truthy."""

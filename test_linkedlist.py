@@ -129,4 +129,6 @@ class TestPair:
     """An improper list is truthy."""
     assert improperList
 
-  # TODO: tail with an improper list.
+  def test_tail(self):
+    """Get the tail of a list."""
+    assertEqual(basicList.tail(1), linkedlist.new((1, 2)))

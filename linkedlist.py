@@ -51,7 +51,7 @@ class _List(collections.abc.Collection, collections.abc.Reversible):
     """Return the list starting after the first i nodes.
 
     If i is greater than the length of the list, return nil (actually the last
-    cdr).
+    cdr). Equivalent to self[i:].
     """
     while i > 0 and _isPair(self):
       self = self.cdr
@@ -73,9 +73,11 @@ class _List(collections.abc.Collection, collections.abc.Reversible):
       raise error
     if isinstance(key, slice):
       s = key.indices(size)
-      if s[1] >= size and s[2] == 1:
-        return self.tail(s[0])
-      return new(itertools.islice(self, key.start, key.stop, key.step))
+      return (
+        self.tail(s[0])
+        if s[1] >= size and s[2] == 1
+        else new(itertools.islice(self, key.start, key.stop, key.step))
+      )
     raise TypeError('Index must be int or slice, got {key}')
 
 

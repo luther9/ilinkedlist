@@ -33,6 +33,10 @@ class _List(collections.abc.Collection, collections.abc.Reversible):
   # Implement the equivalents of list methods.
   __slots__ = ()
 
+  @abc.abstractmethod
+  def __eq__(self, other):
+    pass
+
   def __iter__(self):
     while _isPair(self):
       yield self.car
@@ -93,6 +97,9 @@ class _NilType(_List):
   def __len__(self):
     return 0
 
+  def __eq__(self, other):
+    return other is nil
+
 
 class Pair(_List):
   """The linked list node."""
@@ -106,6 +113,13 @@ class Pair(_List):
   def __len__(self):
     """Return the length of the list."""
     return self._len
+
+  def __eq__(self, other):
+    return (
+      False
+      if not _isPair(other) or self.car != other.car
+      else self.cdr == other.cdr
+    )
 
 
 def _isPair(x):

@@ -68,6 +68,11 @@ class TestNil:
     """A slice returns nil."""
     assert linkedlist.nil[1:3000] is linkedlist.nil
 
+  def test_eq(self):
+    """nil is equal only to itself."""
+    assert linkedlist.nil == linkedlist.nil
+    assert linkedlist.nil != basicList
+
 
 class TestPair:
 
@@ -132,3 +137,8 @@ class TestPair:
   def test_tail(self):
     """Get the tail of a list."""
     assertEqual(basicList.tail(1), linkedlist.new((1, 2)))
+
+  def test_eq(self):
+    """Equality."""
+    assert basicList == linkedlist.new((0, 1, 2))
+    assert basicList != linkedlist.new((2, 1, 0))

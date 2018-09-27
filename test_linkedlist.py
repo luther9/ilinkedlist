@@ -93,6 +93,10 @@ class TestNil:
     assert not (linkedlist.nil < linkedlist.nil)
     assert linkedlist.nil < basicList
 
+  def test_le(self):
+    assert linkedlist.nil <= linkedlist.nil
+    assert linkedlist.nil <= basicList
+
 
 class TestPair:
 
@@ -166,3 +170,7 @@ class TestPair:
   def test_lt(self):
     assert not (basicList < linkedlist.nil)
     assert basicList < linkedlist.new((0, 1, 3))
+
+  def test_lt(self):
+    assert not (basicList <= linkedlist.nil)
+    assert basicList <= basicList

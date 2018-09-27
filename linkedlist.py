@@ -21,8 +21,7 @@
 
 A linked list is defined as either nil or a Pair whose cdr is a linked list.
 Linked lists are hashable. Note that it is possible to create an improper list
-by passing a non-list as the second argument to Pair. This will cause some Pair
-methods to raise exceptions.
+by passing a non-list as the second argument to Pair.
 
 Linked lists are useful, because they can be built element-by-element in O(n).
 Tuples require O(n^2) due to having to copy the tuple with each new element.
@@ -33,6 +32,7 @@ trigger a memory reallocation (and therefore a copy).
 import abc
 import collections
 import itertools
+import operator
 
 __all__ = 'nil', 'Pair', 'new', 'reversed', 'isList'
 
@@ -55,6 +55,10 @@ class _List(collections.abc.Collection, collections.abc.Reversible):
 
   @abc.abstractmethod
   def __lt__(self, other):
+    pass
+
+  @abc.abstractmethod
+  def __le__(self, other):
     pass
 
   def __iter__(self):
@@ -127,9 +131,16 @@ class _NilType(_List):
       else NotImplemented
     )
 
+  def __le__(self, other):
+    return True if isList(other) else NotImplemented
+
 
 def _isNil(x):
   return x is nil
+
+
+def _comparePairs(a, b, f):
+  return f(a.car, b.car) if a.car != b.car else f(a.cdr, b.cdr)
 
 
 class Pair(_List):
@@ -154,9 +165,12 @@ class Pair(_List):
 
   def __lt__(self, other):
     return (
-      False if not _isPair(other)
-      else self.car < other.car if self.car != other.car
-      else self.cdr < other.cdr
+      False if not _isPair(other) else _comparePairs(self, other, operator.lt)
+    )
+
+  def __le__(self, other):
+    return (
+      False if not _isPair(other) else _comparePairs(self, other, operator.le)
     )
 
 

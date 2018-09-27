@@ -98,7 +98,7 @@ class _NilType(_List):
     return 0
 
   def __eq__(self, other):
-    return other is nil
+    return self is other
 
 
 class Pair(_List):

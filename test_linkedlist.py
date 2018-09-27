@@ -1,5 +1,21 @@
-# 2018 Luther Thompson
-# This program is public domain. See file COPYING for details.
+# Copyright 2018 Luther Thompson
+
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License (GPL3) as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+
+# You have the following additional permission: You may convey the program in
+# object code form under the terms of sections 4 and 5 of GPL3 without being
+# bound by section 6 of GPL3.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 # TODO:
 # Implement features, one at a time, in both nil and Pair.
@@ -73,6 +89,10 @@ class TestNil:
     assert linkedlist.nil == linkedlist.nil
     assert linkedlist.nil != basicList
 
+  def test_lt(self):
+    assert not (linkedlist.nil < linkedlist.nil)
+    assert linkedlist.nil < basicList
+
 
 class TestPair:
 
@@ -142,3 +162,7 @@ class TestPair:
     """Equality."""
     assert basicList == linkedlist.new((0, 1, 2))
     assert basicList != linkedlist.new((2, 1, 0))
+
+  def test_lt(self):
+    assert not (basicList < linkedlist.nil)
+    assert basicList < linkedlist.new((0, 1, 3))

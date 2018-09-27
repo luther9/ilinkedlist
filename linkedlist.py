@@ -1,5 +1,21 @@
-# 2018 Luther Thompson
-# This program is public domain. See file COPYING for details.
+# Copyright 2018 Luther Thompson
+
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License (GPL3) as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+
+# You have the following additional permission: You may convey the program in
+# object code form under the terms of sections 4 and 5 of GPL3 without being
+# bound by section 6 of GPL3.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 """An immutable linked list library.
 
@@ -35,6 +51,10 @@ class _List(collections.abc.Collection, collections.abc.Reversible):
 
   @abc.abstractmethod
   def __eq__(self, other):
+    pass
+
+  @abc.abstractmethod
+  def __lt__(self, other):
     pass
 
   def __iter__(self):
@@ -98,7 +118,18 @@ class _NilType(_List):
     return 0
 
   def __eq__(self, other):
-    return self is other
+    return _isNil(other)
+
+  def __lt__(self, other):
+    return (
+      True if _isPair(other)
+      else False if _isNil(other)
+      else NotImplemented
+    )
+
+
+def _isNil(x):
+  return x is nil
 
 
 class Pair(_List):
@@ -119,6 +150,13 @@ class Pair(_List):
       False
       if not _isPair(other) or self.car != other.car
       else self.cdr == other.cdr
+    )
+
+  def __lt__(self, other):
+    return (
+      False if not _isPair(other)
+      else self.car < other.car if self.car != other.car
+      else self.cdr < other.cdr
     )
 
 

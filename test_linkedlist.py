@@ -105,6 +105,10 @@ class TestNil:
     assert linkedlist.nil >= linkedlist.nil
     assert not (linkedlist.nil >= basicList)
 
+  def test_hash(self):
+    """nil is hashable."""
+    assert hash(linkedlist.nil) == 0
+
 
 class TestPair:
 
@@ -190,3 +194,7 @@ class TestPair:
   def test_ge(self):
     assert basicList >= linkedlist.nil
     assert basicList >= basicList
+
+  def test_hash(self):
+    """A Pair hashes its car and cdr."""
+    assert hash(improperList) == hash((11, 93))

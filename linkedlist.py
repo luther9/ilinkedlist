@@ -37,10 +37,12 @@ import operator
 __all__ = 'nil', 'Pair', 'new', 'reversed', 'isList'
 
 
-class _List(collections.abc.Collection, collections.abc.Reversible):
+class _List(
+    collections.abc.Collection, collections.abc.Hashable,
+    collections.abc.Reversible,
+):
   """The abstract base class for nil and Pair."""
   # TODO:
-  # Implement Hashable.
   # Implement Sequence methods. We can't inherit from Sequence, because its
   # concrete methods are inefficient for linked lists.
   # count
@@ -151,6 +153,9 @@ class _NilType(_List):
       else NotImplemented
     )
 
+  def __hash__(self):
+    return 0
+
 
 def _isNil(x):
   return x is nil
@@ -199,6 +204,9 @@ class Pair(_List):
     return (
       True if not _isPair(other) else _comparePairs(self, other, operator.ge)
     )
+
+  def __hash__(self):
+    return hash((self.car, self.cdr))
 
 
 def _isPair(x):

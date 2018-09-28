@@ -101,6 +101,10 @@ class TestNil:
     assert not (linkedlist.nil > linkedlist.nil)
     assert not (linkedlist.nil > basicList)
 
+  def test_ge(self):
+    assert linkedlist.nil >= linkedlist.nil
+    assert not (linkedlist.nil >= basicList)
+
 
 class TestPair:
 
@@ -182,3 +186,7 @@ class TestPair:
   def test_gt(self):
     assert basicList > linkedlist.nil
     assert basicList > linkedlist.new((0, 1, -1))
+
+  def test_ge(self):
+    assert basicList >= linkedlist.nil
+    assert basicList >= basicList

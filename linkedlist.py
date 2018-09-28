@@ -40,7 +40,6 @@ __all__ = 'nil', 'Pair', 'new', 'reversed', 'isList'
 class _List(collections.abc.Collection, collections.abc.Reversible):
   """The abstract base class for nil and Pair."""
   # TODO:
-  # Comparison methods.
   # Implement Hashable.
   # Implement Sequence methods. We can't inherit from Sequence, because its
   # concrete methods are inefficient for linked lists.
@@ -63,6 +62,10 @@ class _List(collections.abc.Collection, collections.abc.Reversible):
 
   @abc.abstractmethod
   def __gt__(self, other):
+    pass
+
+  @abc.abstractmethod
+  def __ge__(self, other):
     pass
 
   def __iter__(self):
@@ -130,8 +133,8 @@ class _NilType(_List):
 
   def __lt__(self, other):
     return (
-      True if _isPair(other)
-      else False if _isNil(other)
+      False if _isNil(other)
+      else True if _isPair(other)
       else NotImplemented
     )
 
@@ -140,6 +143,13 @@ class _NilType(_List):
 
   def __gt__(self, other):
     return False if isList(other) else NotImplemented
+
+  def __ge__(self, other):
+    return (
+      True if _isNil(other)
+      else False if _isPair(other)
+      else NotImplemented
+    )
 
 
 def _isNil(x):
@@ -183,6 +193,11 @@ class Pair(_List):
   def __gt__(self, other):
     return (
       True if not _isPair(other) else _comparePairs(self, other, operator.gt)
+    )
+
+  def __ge__(self, other):
+    return (
+      True if not _isPair(other) else _comparePairs(self, other, operator.ge)
     )
 
 

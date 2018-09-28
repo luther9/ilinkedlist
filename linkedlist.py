@@ -61,6 +61,10 @@ class _List(collections.abc.Collection, collections.abc.Reversible):
   def __le__(self, other):
     pass
 
+  @abc.abstractmethod
+  def __gt__(self, other):
+    pass
+
   def __iter__(self):
     while _isPair(self):
       yield self.car
@@ -134,6 +138,9 @@ class _NilType(_List):
   def __le__(self, other):
     return True if isList(other) else NotImplemented
 
+  def __gt__(self, other):
+    return False if isList(other) else NotImplemented
+
 
 def _isNil(x):
   return x is nil
@@ -171,6 +178,11 @@ class Pair(_List):
   def __le__(self, other):
     return (
       False if not _isPair(other) else _comparePairs(self, other, operator.le)
+    )
+
+  def __gt__(self, other):
+    return (
+      True if not _isPair(other) else _comparePairs(self, other, operator.gt)
     )
 
 

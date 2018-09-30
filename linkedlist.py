@@ -117,6 +117,18 @@ class _List(
       )
     raise TypeError('Index must be int or slice, got {key}')
 
+  def appendReverse(self, head):
+    """Append the elements of head, in reverse order, to the beginning of self.
+
+    Return the resulting list. Faster than concatenation.
+    """
+    for x in head:
+      self = Pair(x, self)
+    return self
+
+  def __add__(self, other):
+    return other.appendReverse(reversed(self))
+
 
 def isList(x):
   """Return True if x is nil or a Pair, otherwise False."""
@@ -218,10 +230,7 @@ def reversed(iterable):
 
   This function is faster than new if you don't want to preserve order.
   """
-  new = nil
-  for x in iterable:
-    new = Pair(x, new)
-  return new
+  return nil.appendReverse(iterable)
 
 
 def new(iterable):

@@ -198,3 +198,10 @@ class TestPair:
   def test_hash(self):
     """A Pair hashes its car and cdr."""
     assert hash(improperList) == hash((11, 93))
+
+  def test_add(self):
+    """Concatenation."""
+    assert (
+      basicList + linkedlist.new((3, 4, 5))
+      == linkedlist.new((0, 1, 2, 3, 4, 5))
+    )

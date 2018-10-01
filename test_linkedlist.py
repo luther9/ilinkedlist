@@ -205,3 +205,6 @@ class TestPair:
       basicList + linkedlist.new((3, 4, 5))
       == linkedlist.new((0, 1, 2, 3, 4, 5))
     )
+
+  def test_index(self):
+    assert basicList.index(2) == 2

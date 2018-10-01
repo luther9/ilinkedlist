@@ -37,6 +37,15 @@ import operator
 __all__ = 'nil', 'Pair', 'new', 'reversed', 'isList'
 
 
+def _index(lst, x, i, end):
+  while _isPair(lst) and i < end:
+    if x == lst.car:
+      return i
+    lst = lst.cdr
+    i += 1
+  raise ValueError(f'{x} not in range')
+
+
 class _List(
     collections.abc.Collection, collections.abc.Hashable,
     collections.abc.Reversible,
@@ -128,6 +137,16 @@ class _List(
 
   def __add__(self, other):
     return other.appendReverse(reversed(self))
+
+  def index(self, x, start=0, end=None):
+    end_ = len(self) if end is None else end
+    if start >= end_:
+      raise ValueError(f'{x} not in range')
+    i = 0
+    while i < start:
+      self = self.cdr
+      i += 1
+    return _index(self, x, i, end_)
 
 
 def isList(x):

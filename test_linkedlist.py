@@ -217,3 +217,6 @@ class TestPair:
 
   def test_mul(self):
     assert basicList * 2 == linkedlist.new((1, 2, 3, 1, 2, 3))
+
+  def test_rmul(self):
+    assert 2 * basicList == linkedlist.new((1, 2, 3, 1, 2, 3))

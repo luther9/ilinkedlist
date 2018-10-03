@@ -44,7 +44,6 @@ class _List(
   """The abstract base class for nil and Pair."""
 
   # TODO:
-  # __rmul__
   # setItem
   # insert
   # remove
@@ -138,9 +137,11 @@ class _List(
     return self
 
   def __add__(self, other):
+    """Concatenate two linked lists."""
     return other.appendReverse(reversed(self))
 
   def __radd__(self, other):
+    """Concatenate a non-linked list to a linked list. Return a linked list."""
     return self.appendReverse(reversed(other))
 
   def __mul__(self, n):
@@ -149,6 +150,9 @@ class _List(
     for i in range(n - 1):
       self += self
     return self
+
+  def __rmul__(self, n):
+    return self * n
 
   def member(self, x):
     """Return the first sublist whose car equals x.

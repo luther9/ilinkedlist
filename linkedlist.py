@@ -51,6 +51,7 @@ class _List(
   # insert
   # remove
   # sort
+  # __str__
   __slots__ = ()
 
   @abc.abstractmethod
@@ -74,7 +75,7 @@ class _List(
     pass
 
   @abc.abstractmethod
-  def tail(self, i):
+  def __repr__(self):
     pass
 
   def nodes(self):

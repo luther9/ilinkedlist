@@ -220,3 +220,6 @@ class TestPair:
 
   def test_rmul(self):
     assert 2 * basicList == linkedlist.new((1, 2, 3, 1, 2, 3))
+
+  def test_setItem(self):
+    assert basicList.setItem(1, 66) == linkedlist.new((1, 66, 3))

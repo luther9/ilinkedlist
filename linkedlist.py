@@ -44,7 +44,6 @@ class _List(
   """The abstract base class for nil and Pair."""
 
   # TODO:
-  # setItem
   # insert
   # remove
   # sort
@@ -173,6 +172,10 @@ class _List(
       if item == x:
         c += 1
     return c
+
+  def setItem(self, index, value):
+    """Return a copy of the list with the item at index changed to value."""
+    return self[:index] + Pair(value, self.tail(index + 1))
 
 
 def isList(x):

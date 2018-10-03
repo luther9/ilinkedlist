@@ -209,4 +209,5 @@ class TestPair:
     with pytest.raises(StopIteration):
       next(it)
 
-  #def test_count(self):
+  def test_count(self):
+    assert linkedlist.new((0, 0, 1, 1, 1)).count(1) == 3

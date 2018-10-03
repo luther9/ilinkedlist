@@ -44,9 +44,13 @@ class _List(
   """The abstract base class for nil and Pair."""
 
   # TODO:
-  # Implement Sequence methods. We can't inherit from Sequence, because its
-  # concrete methods are inefficient for linked lists.
-  # Implement the equivalents of list methods.
+  # __radd__
+  # __mul__
+  # __rmul__
+  # setItem
+  # insert
+  # remove
+  # sort
   __slots__ = ()
 
   @abc.abstractmethod
@@ -150,11 +154,11 @@ class _List(
       self = self.cdr
 
   def count(self, x):
+    """Return the number of times x is in the list."""
     c = 0
-    while _isPair(self):
-      if self.car == x:
+    for item in self:
+      if item == x:
         c += 1
-      self = self.cdr
     return c
 
 

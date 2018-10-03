@@ -211,3 +211,6 @@ class TestPair:
 
   def test_count(self):
     assert linkedlist.new((0, 0, 1, 1, 1)).count(1) == 3
+
+  def test_radd(self):
+    assert [4, 5, 6] + basicList == linkedlist.new((4, 5, 6, 1, 2, 3))

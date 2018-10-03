@@ -142,6 +142,9 @@ class _List(
   def __add__(self, other):
     return other.appendReverse(reversed(self))
 
+  def __radd__(self, other):
+    return self.appendReverse(reversed(other))
+
   def member(self, x):
     """Return the first sublist whose car equals x.
 

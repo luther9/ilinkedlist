@@ -214,3 +214,6 @@ class TestPair:
 
   def test_radd(self):
     assert [4, 5, 6] + basicList == linkedlist.new((4, 5, 6, 1, 2, 3))
+
+  def test_mul(self):
+    assert basicList * 2 == linkedlist.new((1, 2, 3, 1, 2, 3))

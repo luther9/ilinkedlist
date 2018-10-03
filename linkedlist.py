@@ -44,8 +44,6 @@ class _List(
   """The abstract base class for nil and Pair."""
 
   # TODO:
-  # __radd__
-  # __mul__
   # __rmul__
   # setItem
   # insert
@@ -144,6 +142,13 @@ class _List(
 
   def __radd__(self, other):
     return self.appendReverse(reversed(other))
+
+  def __mul__(self, n):
+    if n <= 0:
+      return nil
+    for i in range(n - 1):
+      self += self
+    return self
 
   def member(self, x):
     """Return the first sublist whose car equals x.

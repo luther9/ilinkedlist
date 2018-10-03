@@ -37,25 +37,15 @@ import operator
 __all__ = 'nil', 'Pair', 'new', 'reversed', 'isList'
 
 
-def _index(lst, x, i, end):
-  while _isPair(lst) and i < end:
-    if x == lst.car:
-      return i
-    lst = lst.cdr
-    i += 1
-  raise ValueError(f'{x} not in range')
-
-
 class _List(
     collections.abc.Collection, collections.abc.Hashable,
     collections.abc.Reversible,
 ):
   """The abstract base class for nil and Pair."""
+
   # TODO:
   # Implement Sequence methods. We can't inherit from Sequence, because its
   # concrete methods are inefficient for linked lists.
-  # count
-  # index
   # Implement the equivalents of list methods.
   __slots__ = ()
 
@@ -79,10 +69,19 @@ class _List(
   def __ge__(self, other):
     pass
 
-  def __iter__(self):
+  @abc.abstractmethod
+  def tail(self, i):
+    pass
+
+  def nodes(self):
+    """Return an iterator that yields each Pair in the linked list."""
     while _isPair(self):
-      yield self.car
+      yield self
       self = self.cdr
+
+  def __iter__(self):
+    for node in self.nodes():
+      yield node.car
 
   def __contains__(self, item):
     for x in self:
@@ -93,16 +92,16 @@ class _List(
   def __reversed__(self):
     return reversed(self)
 
-  def tail(self, i):
-    """Return the list starting after the first i nodes.
+  def tail(self, index):
+    """Return the list starting after the first index nodes.
 
     If i is greater than the length of the list, return nil (actually the last
     cdr). Equivalent to self[i:].
     """
-    while i > 0 and _isPair(self):
-      self = self.cdr
-      i -= 1
-    return self
+    for i, node in enumerate(self.nodes()):
+      if i == index:
+        return node
+    return nil
 
   def __getitem__(self, key):
     """Get the key-th element of the list."""
@@ -138,15 +137,25 @@ class _List(
   def __add__(self, other):
     return other.appendReverse(reversed(self))
 
-  def index(self, x, start=0, end=None):
-    end_ = len(self) if end is None else end
-    if start >= end_:
-      raise ValueError(f'{x} not in range')
-    i = 0
-    while i < start:
+  def member(self, x):
+    """Return the first sublist whose car equals x.
+
+    If x is not in the list, return None (not nil). We provide this method
+    instead of the index method of sequences, because for linked lists, it's
+    more natural to refer to an item's position by node than by index.
+    """
+    while _isPair(self):
+      if self.car == x:
+        return self
       self = self.cdr
-      i += 1
-    return _index(self, x, i, end_)
+
+  def count(self, x):
+    c = 0
+    while _isPair(self):
+      if self.car == x:
+        c += 1
+      self = self.cdr
+    return c
 
 
 def isList(x):
@@ -156,6 +165,7 @@ def isList(x):
 
 class _NilType(_List):
   """The singleton class for nil."""
+
   __slots__ = ()
 
   def __len__(self):
@@ -187,6 +197,9 @@ class _NilType(_List):
   def __hash__(self):
     return 0
 
+  def __repr__(self):
+    return 'nil'
+
 
 def _isNil(x):
   return x is nil
@@ -198,6 +211,7 @@ def _comparePairs(a, b, f):
 
 class Pair(_List):
   """The linked list node."""
+
   __slots__ = 'car', 'cdr', '_len'
 
   def __init__(self, car, cdr):
@@ -238,6 +252,10 @@ class Pair(_List):
 
   def __hash__(self):
     return hash((self.car, self.cdr))
+
+  def __repr__(self):
+    lst = ', '.join(repr(x) for x in self)
+    return f'new({lst})'
 
 
 def _isPair(x):

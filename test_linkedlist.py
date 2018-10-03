@@ -24,23 +24,13 @@ import pytest
 
 import linkedlist
 
-basicList = linkedlist.new((0, 1, 2))
+basicList = linkedlist.new((1, 2, 3))
 improperList = linkedlist.Pair(11, 93)
-
-
-def assertEqual(a, b):
-  """Assert that 2 iterables are the same type and have the same elements.
-
-  We should be able to delete this function when we implement equality.
-  """
-  assert type(a) is type(b)
-  for x, y in zip(a, b):
-    assert x == y
 
 
 def test_new():
   """Make a linked list from an iterable."""
-  assert tuple(basicList) == (0, 1, 2)
+  assert tuple(basicList) == (1, 2, 3)
 
 
 def test_reversed():
@@ -124,14 +114,16 @@ class TestPair:
   def test_iter(self):
     """We can iterate through a Pair."""
     it = iter(basicList)
-    assert next(it) == 0
     assert next(it) == 1
     assert next(it) == 2
+    assert next(it) == 3
+    with pytest.raises(StopIteration):
+      next(it)
 
   def test_contains(self):
     """'in' operator works."""
     assert 2 in basicList
-    assert not (3 in basicList)
+    assert not (4 in basicList)
 
   def test_len(self):
     """len() works."""
@@ -139,11 +131,11 @@ class TestPair:
 
   def test_reversed(self):
     """Get a reversed list."""
-    assert tuple(reversed(basicList)) == (2, 1, 0)
+    assert tuple(reversed(basicList)) == (3, 2, 1)
 
   def test_getitem(self):
     """Indexing works."""
-    assert basicList[1] == 1
+    assert basicList[1] == 2
 
   def test_getitemIndexError(self):
     """Out-of-range index raises IndexError."""
@@ -152,11 +144,11 @@ class TestPair:
 
   def test_getitemNegative(self):
     """Negative index."""
-    assert basicList[-3] == 0
+    assert basicList[-3] == 1
 
   def test_getitemSlice(self):
     """Slicing works."""
-    assertEqual(basicList[0:2], linkedlist.new((0, 1)))
+    assert basicList[0:2] == linkedlist.new((1, 2))
 
   def test_getitemSliceOutOfRange(self):
     """Out of range slice returns nil."""
@@ -172,11 +164,11 @@ class TestPair:
 
   def test_tail(self):
     """Get the tail of a list."""
-    assertEqual(basicList.tail(1), linkedlist.new((1, 2)))
+    assert basicList.tail(1) == linkedlist.new((2, 3))
 
   def test_eq(self):
     """Equality."""
-    assert basicList == linkedlist.new((0, 1, 2))
+    assert basicList == linkedlist.new((1, 2, 3))
     assert basicList != linkedlist.new((2, 1, 0))
 
   def test_lt(self):
@@ -203,8 +195,18 @@ class TestPair:
     """Concatenation."""
     assert (
       basicList + linkedlist.new((3, 4, 5))
-      == linkedlist.new((0, 1, 2, 3, 4, 5))
+      == linkedlist.new((1, 2, 3, 3, 4, 5))
     )
 
-  def test_index(self):
-    assert basicList.index(2) == 2
+  def test_member(self):
+    assert linkedlist.new((-1, 0, 1, 2, 3)).member(1) == basicList
+
+  def test_nodes(self):
+    it = basicList.nodes()
+    assert next(it) == basicList
+    assert next(it) == linkedlist.new((2, 3))
+    assert next(it) == linkedlist.new((3,))
+    with pytest.raises(StopIteration):
+      next(it)
+
+  #def test_count(self):

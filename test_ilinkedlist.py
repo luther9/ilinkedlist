@@ -22,10 +22,10 @@
 
 import pytest
 
-import linkedlist
+import ilinkedlist
 
-basicList = linkedlist.new((1, 2, 3))
-improperList = linkedlist.Pair(11, 93)
+basicList = ilinkedlist.new((1, 2, 3))
+improperList = ilinkedlist.Pair(11, 93)
 
 
 def test_new():
@@ -34,77 +34,77 @@ def test_new():
 
 
 def test_reversed():
-  assert tuple(linkedlist.reversed((0, 1, 2))) == (2, 1, 0)
+  assert tuple(ilinkedlist.reversed((0, 1, 2))) == (2, 1, 0)
 
 
 def test_isList():
   """isList returns False for a non-list."""
-  assert linkedlist.isList(None) is False
+  assert ilinkedlist.isList(None) is False
 
 
 class TestNil:
 
   def test_isList(self):
     """isList(nil) is True."""
-    assert linkedlist.isList(linkedlist.nil) is True
+    assert ilinkedlist.isList(ilinkedlist.nil) is True
 
   def test_contains(self):
     """nil does't contain anything."""
-    assert not (None in linkedlist.nil)
+    assert not (None in ilinkedlist.nil)
 
   def test_iter(self):
     """nil is an empty iterable."""
-    for x in linkedlist.nil:
+    for x in ilinkedlist.nil:
       assert False
 
   def test_len(self):
     """nil is empty"""
-    assert len(linkedlist.nil) == 0
+    assert len(ilinkedlist.nil) == 0
 
   def test_reversed(self):
     """reversed(nil) is nil"""
-    assert reversed(linkedlist.nil) is linkedlist.nil
+    assert reversed(ilinkedlist.nil) is ilinkedlist.nil
 
   def test_getitemIndex(self):
     """Indexing raises IndexError."""
     with pytest.raises(IndexError):
-      linkedlist.nil[0]
+      ilinkedlist.nil[0]
 
   def test_getitemSlice(self):
     """A slice returns nil."""
-    assert linkedlist.nil[1:3000] is linkedlist.nil
+    assert ilinkedlist.nil[1:3000] is ilinkedlist.nil
 
   def test_eq(self):
     """nil is equal only to itself."""
-    assert linkedlist.nil == linkedlist.nil
-    assert linkedlist.nil != basicList
+    assert ilinkedlist.nil == ilinkedlist.nil
+    assert ilinkedlist.nil != basicList
 
   def test_lt(self):
-    assert not (linkedlist.nil < linkedlist.nil)
-    assert linkedlist.nil < basicList
+    assert not (ilinkedlist.nil < ilinkedlist.nil)
+    assert ilinkedlist.nil < basicList
 
   def test_le(self):
-    assert linkedlist.nil <= linkedlist.nil
-    assert linkedlist.nil <= basicList
+    assert ilinkedlist.nil <= ilinkedlist.nil
+    assert ilinkedlist.nil <= basicList
 
   def test_gt(self):
-    assert not (linkedlist.nil > linkedlist.nil)
-    assert not (linkedlist.nil > basicList)
+    assert not (ilinkedlist.nil > ilinkedlist.nil)
+    assert not (ilinkedlist.nil > basicList)
 
   def test_ge(self):
-    assert linkedlist.nil >= linkedlist.nil
-    assert not (linkedlist.nil >= basicList)
+    assert ilinkedlist.nil >= ilinkedlist.nil
+    assert not (ilinkedlist.nil >= basicList)
 
   def test_hash(self):
     """nil is hashable."""
-    assert hash(linkedlist.nil) == 0
+    assert hash(ilinkedlist.nil) == 0
 
 
 class TestPair:
 
   def test_isList(self):
     """A Pair is a list."""
-    assert linkedlist.isList(basicList) is True
+    assert ilinkedlist.isList(basicList) is True
 
   def test_attributes(self):
     """Has a car and cdr."""
@@ -148,11 +148,11 @@ class TestPair:
 
   def test_getitemSlice(self):
     """Slicing works."""
-    assert basicList[0:2] == linkedlist.new((1, 2))
+    assert basicList[0:2] == ilinkedlist.new((1, 2))
 
   def test_getitemSliceOutOfRange(self):
     """Out of range slice returns nil."""
-    assert basicList[10:2365] is linkedlist.nil
+    assert basicList[10:2365] is ilinkedlist.nil
 
   def test_getitemSliceBig(self):
     """An oversize slice returns the same list."""
@@ -164,27 +164,27 @@ class TestPair:
 
   def test_tail(self):
     """Get the tail of a list."""
-    assert basicList.tail(1) == linkedlist.new((2, 3))
+    assert basicList.tail(1) == ilinkedlist.new((2, 3))
 
   def test_eq(self):
     """Equality."""
-    assert basicList == linkedlist.new((1, 2, 3))
-    assert basicList != linkedlist.new((2, 1, 0))
+    assert basicList == ilinkedlist.new((1, 2, 3))
+    assert basicList != ilinkedlist.new((2, 1, 0))
 
   def test_lt(self):
-    assert not (basicList < linkedlist.nil)
-    assert basicList < linkedlist.new((0, 1, 3))
+    assert not (basicList < ilinkedlist.nil)
+    assert basicList < ilinkedlist.new((0, 1, 3))
 
   def test_lt(self):
-    assert not (basicList <= linkedlist.nil)
+    assert not (basicList <= ilinkedlist.nil)
     assert basicList <= basicList
 
   def test_gt(self):
-    assert basicList > linkedlist.nil
-    assert basicList > linkedlist.new((0, 1, -1))
+    assert basicList > ilinkedlist.nil
+    assert basicList > ilinkedlist.new((0, 1, -1))
 
   def test_ge(self):
-    assert basicList >= linkedlist.nil
+    assert basicList >= ilinkedlist.nil
     assert basicList >= basicList
 
   def test_hash(self):
@@ -194,44 +194,50 @@ class TestPair:
   def test_add(self):
     """Concatenation."""
     assert (
-      basicList + linkedlist.new((3, 4, 5))
-      == linkedlist.new((1, 2, 3, 3, 4, 5))
+      basicList + ilinkedlist.new((3, 4, 5))
+      == ilinkedlist.new((1, 2, 3, 3, 4, 5))
     )
 
   def test_member(self):
-    assert linkedlist.new((-1, 0, 1, 2, 3)).member(1) == basicList
+    assert ilinkedlist.new((-1, 0, 1, 2, 3)).member(1) == basicList
 
   def test_nodes(self):
     it = basicList.nodes()
     assert next(it) == basicList
-    assert next(it) == linkedlist.new((2, 3))
-    assert next(it) == linkedlist.new((3,))
+    assert next(it) == ilinkedlist.new((2, 3))
+    assert next(it) == ilinkedlist.new((3,))
     with pytest.raises(StopIteration):
       next(it)
 
   def test_count(self):
-    assert linkedlist.new((0, 0, 1, 1, 1)).count(1) == 3
+    assert ilinkedlist.new((0, 0, 1, 1, 1)).count(1) == 3
 
   def test_radd(self):
-    assert (4, 5, 6) + basicList == linkedlist.new((4, 5, 6, 1, 2, 3))
+    assert (4, 5, 6) + basicList == ilinkedlist.new((4, 5, 6, 1, 2, 3))
 
   def test_mul(self):
-    assert basicList * 3 == linkedlist.new((1, 2, 3, 1, 2, 3, 1, 2, 3))
+    assert basicList * 3 == ilinkedlist.new((1, 2, 3, 1, 2, 3, 1, 2, 3))
 
   def test_rmul(self):
-    assert 2 * basicList == linkedlist.new((1, 2, 3, 1, 2, 3))
+    assert 2 * basicList == ilinkedlist.new((1, 2, 3, 1, 2, 3))
 
   def test_setItem(self):
-    assert basicList.setItem(1, 66) == linkedlist.new((1, 66, 3))
+    assert basicList.setItem(1, 66) == ilinkedlist.new((1, 66, 3))
 
   def test_setItemSlice(self):
     assert (
       basicList.setItem(slice(0, 2), (10, 11, 12))
-      == linkedlist.new((10, 11, 12, 3))
+      == ilinkedlist.new((10, 11, 12, 3))
     )
 
   def test_setItemSliceStep(self):
     assert (
-      linkedlist.new((1, 2, 3, 4, 5, 6)).setItem(slice(1, 5, 2), (10, 20))
-      == linkedlist.new((1, 10, 3, 20, 5, 6))
+      ilinkedlist.new((1, 2, 3, 4, 5, 6)).setItem(slice(1, 5, 2), (10, 20))
+      == ilinkedlist.new((1, 10, 3, 20, 5, 6))
     )
+
+  def test_delItem(self):
+    assert basicList.delItem(1) == ilinkedlist.new((0, 2))
+
+  # delItemSlice
+  # delItemSliceStep

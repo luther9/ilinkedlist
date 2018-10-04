@@ -229,3 +229,9 @@ class TestPair:
       basicList.setItem(slice(0, 2), (10, 11, 12))
       == linkedlist.new((10, 11, 12, 3))
     )
+
+  def test_setItemSliceStep(self):
+    assert (
+      linkedlist.new((1, 2, 3, 4, 5, 6)).setItem(slice(1, 5, 2), (10, 20))
+      == linkedlist.new((1, 10, 3, 20, 5, 6))
+    )

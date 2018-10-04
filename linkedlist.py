@@ -125,7 +125,7 @@ class _List(
         if s[1] >= size and s[2] == 1
         else new(itertools.islice(self, key.start, key.stop, key.step))
       )
-    raise TypeError('Index must be int or slice, got {key}')
+    raise TypeError(f'Index must be int or slice, got {key}')
 
   def appendReverse(self, head):
     """Append the elements of head, in reverse order, to the beginning of self.
@@ -195,12 +195,16 @@ class _List(
         Pair(value, self.tail(key + 1)).appendReverse(self.headReverse(key))
       )
     if isinstance(key, slice):
+      tail = self.tail(key.stop)
       if key.step is None:
-        return (
-          (value + self.tail(key.stop)).appendReverse(
-            self.headReverse(key.start))
-        )
-    raise TypeError('Index must be int or slice, got {key}')
+        return (value + tail).appendReverse(self.headReverse(key.start))
+      iRange = range(key.start or 0, key.stop, key.step)
+      valueIter = iter(value)
+      return (
+        next(valueIter) if i in iRange else x
+        for i, x in enumerate(itertools.islice(self, key.stop))
+      ) + tail
+    raise TypeError(f'Index must be int or slice, got {key}')
 
 
 def isList(x):

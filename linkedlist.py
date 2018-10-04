@@ -191,13 +191,11 @@ class _List(
     key may be a slice object, in which case value must be iterable.
     """
     if isinstance(key, int):
-      return (
-        Pair(value, self.tail(key + 1)).appendReverse(self.headReverse(key))
-      )
+      return itertools.islice(self, key) + Pair(value, self.tail(key + 1))
     if isinstance(key, slice):
       tail = self.tail(key.stop)
       if key.step is None:
-        return (value + tail).appendReverse(self.headReverse(key.start))
+        return itertools.islice(self, key.start) + (value + tail)
       iRange = range(key.start or 0, key.stop, key.step)
       valueIter = iter(value)
       return (

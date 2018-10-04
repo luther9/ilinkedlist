@@ -213,13 +213,19 @@ class TestPair:
     assert linkedlist.new((0, 0, 1, 1, 1)).count(1) == 3
 
   def test_radd(self):
-    assert [4, 5, 6] + basicList == linkedlist.new((4, 5, 6, 1, 2, 3))
+    assert (4, 5, 6) + basicList == linkedlist.new((4, 5, 6, 1, 2, 3))
 
   def test_mul(self):
-    assert basicList * 2 == linkedlist.new((1, 2, 3, 1, 2, 3))
+    assert basicList * 3 == linkedlist.new((1, 2, 3, 1, 2, 3, 1, 2, 3))
 
   def test_rmul(self):
     assert 2 * basicList == linkedlist.new((1, 2, 3, 1, 2, 3))
 
   def test_setItem(self):
     assert basicList.setItem(1, 66) == linkedlist.new((1, 66, 3))
+
+  def test_setItemSlice(self):
+    assert (
+      basicList.setItem(slice(0, 2), (10, 11, 12))
+      == linkedlist.new((10, 11, 12, 3))
+    )

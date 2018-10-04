@@ -44,6 +44,7 @@ class _List(
   """The abstract base class for nil and Pair."""
 
   # TODO:
+  # delItem
   # insert
   # remove
   # sort
@@ -146,9 +147,10 @@ class _List(
   def __mul__(self, n):
     if n <= 0:
       return nil
+    lst = self
     for i in range(n - 1):
-      self += self
-    return self
+      lst = self + lst
+    return lst
 
   def __rmul__(self, n):
     return self * n
@@ -173,9 +175,32 @@ class _List(
         c += 1
     return c
 
-  def setItem(self, index, value):
-    """Return a copy of the list with the item at index changed to value."""
-    return self[:index] + Pair(value, self.tail(index + 1))
+  def headReverse(self, index):
+    """Return a list of the first index items in reverse order.
+
+    Faster than a slice.
+    """
+    lst = nil
+    for x in itertools.islice(self, index):
+      lst = Pair(x, lst)
+    return lst
+
+  def setItem(self, key, value):
+    """Return a copy of the list with the item at key changed to value.
+
+    key may be a slice object, in which case value must be iterable.
+    """
+    if isinstance(key, int):
+      return (
+        Pair(value, self.tail(key + 1)).appendReverse(self.headReverse(key))
+      )
+    if isinstance(key, slice):
+      if key.step is None:
+        return (
+          (value + self.tail(key.stop)).appendReverse(
+            self.headReverse(key.start))
+        )
+    raise TypeError('Index must be int or slice, got {key}')
 
 
 def isList(x):

@@ -24,13 +24,13 @@ import pytest
 
 import ilinkedlist
 
-basicList = ilinkedlist.new((1, 2, 3))
+basicList = ilinkedlist.new((1, 2, 3, 4))
 improperList = ilinkedlist.Pair(11, 93)
 
 
 def test_new():
   """Make a linked list from an iterable."""
-  assert tuple(basicList) == (1, 2, 3)
+  assert tuple(basicList) == (1, 2, 3, 4)
 
 
 def test_reversed():
@@ -50,7 +50,7 @@ class TestNil:
 
   def test_contains(self):
     """nil does't contain anything."""
-    assert not (None in ilinkedlist.nil)
+    assert None not in ilinkedlist.nil
 
   def test_iter(self):
     """nil is an empty iterable."""
@@ -117,21 +117,22 @@ class TestPair:
     assert next(it) == 1
     assert next(it) == 2
     assert next(it) == 3
+    assert next(it) == 4
     with pytest.raises(StopIteration):
       next(it)
 
   def test_contains(self):
     """'in' operator works."""
     assert 2 in basicList
-    assert not (4 in basicList)
+    assert 5 not in basicList
 
   def test_len(self):
     """len() works."""
-    assert len(basicList) == 3
+    assert len(basicList) == 4
 
   def test_reversed(self):
     """Get a reversed list."""
-    assert tuple(reversed(basicList)) == (3, 2, 1)
+    assert tuple(reversed(basicList)) == (4, 3, 2, 1)
 
   def test_getitem(self):
     """Indexing works."""
@@ -144,7 +145,7 @@ class TestPair:
 
   def test_getitemNegative(self):
     """Negative index."""
-    assert basicList[-3] == 1
+    assert basicList[-3] == 2
 
   def test_getitemSlice(self):
     """Slicing works."""
@@ -164,11 +165,11 @@ class TestPair:
 
   def test_tail(self):
     """Get the tail of a list."""
-    assert basicList.tail(1) == ilinkedlist.new((2, 3))
+    assert basicList.tail(1) == ilinkedlist.new((2, 3, 4))
 
   def test_eq(self):
     """Equality."""
-    assert basicList == ilinkedlist.new((1, 2, 3))
+    assert basicList == ilinkedlist.new((1, 2, 3, 4))
     assert basicList != ilinkedlist.new((2, 1, 0))
 
   def test_lt(self):
@@ -195,17 +196,18 @@ class TestPair:
     """Concatenation."""
     assert (
       basicList + ilinkedlist.new((3, 4, 5))
-      == ilinkedlist.new((1, 2, 3, 3, 4, 5))
+      == ilinkedlist.new((1, 2, 3, 4, 3, 4, 5))
     )
 
   def test_member(self):
-    assert ilinkedlist.new((-1, 0, 1, 2, 3)).member(1) == basicList
+    assert ilinkedlist.new((-1, 0, 1, 2, 3, 4)).member(1) == basicList
 
   def test_nodes(self):
     it = basicList.nodes()
     assert next(it) == basicList
-    assert next(it) == ilinkedlist.new((2, 3))
-    assert next(it) == ilinkedlist.new((3,))
+    assert next(it) == ilinkedlist.new((2, 3, 4))
+    assert next(it) == ilinkedlist.new((3, 4))
+    assert next(it) == ilinkedlist.new((4,))
     with pytest.raises(StopIteration):
       next(it)
 
@@ -213,21 +215,24 @@ class TestPair:
     assert ilinkedlist.new((0, 0, 1, 1, 1)).count(1) == 3
 
   def test_radd(self):
-    assert (4, 5, 6) + basicList == ilinkedlist.new((4, 5, 6, 1, 2, 3))
+    assert (4, 5, 6) + basicList == ilinkedlist.new((4, 5, 6, 1, 2, 3, 4))
 
   def test_mul(self):
-    assert basicList * 3 == ilinkedlist.new((1, 2, 3, 1, 2, 3, 1, 2, 3))
+    assert (
+      basicList * 3
+      == ilinkedlist.new((1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4))
+    )
 
   def test_rmul(self):
-    assert 2 * basicList == ilinkedlist.new((1, 2, 3, 1, 2, 3))
+    assert 2 * basicList == ilinkedlist.new((1, 2, 3, 4, 1, 2, 3, 4))
 
   def test_setItem(self):
-    assert basicList.setItem(1, 66) == ilinkedlist.new((1, 66, 3))
+    assert basicList.setItem(1, 66) == ilinkedlist.new((1, 66, 3, 4))
 
   def test_setItemSlice(self):
     assert (
-      basicList.setItem(slice(0, 2), (10, 11, 12))
-      == ilinkedlist.new((10, 11, 12, 3))
+      basicList.setItem(slice(1, 3), (10, 11, 12))
+      == ilinkedlist.new((1, 10, 11, 12, 4))
     )
 
   def test_setItemSliceStep(self):
@@ -237,15 +242,23 @@ class TestPair:
     )
 
   def test_delItem(self):
-    assert basicList.delItem(1) == ilinkedlist.new((1, 3))
+    assert basicList.delItem(1) == ilinkedlist.new((1, 3, 4))
 
   def test_delItemSlice(self):
-    assert ilinkedlist.new((1, 20, 30, 2, 3)).delItem(slice(1, 3)) == basicList
+    assert (
+      ilinkedlist.new((1, 20, 30, 2, 3, 4)).delItem(slice(1, 3)) == basicList
+    )
 
   def test_delItemSliceStep(self):
     assert (
-      ilinkedlist.new((1, 10, 2, 20, 3)).delItem(slice(1, 4, 2)) == basicList
+      ilinkedlist.new((1, 10, 2, 20, 3, 30, 4)).delItem(slice(1, 6, 2))
+      == basicList
     )
 
   def test_insert(self):
-    assert basicList.insert(1, 40) == ilinkedlist.new((1, 40, 2, 3))
+    assert basicList.insert(1, 40) == ilinkedlist.new((1, 40, 2, 3, 4))
+
+  def test_splitAt(self):
+    assert (
+      basicList.splitAt(2) == (ilinkedlist.new((2, 1)), ilinkedlist.new((3, 4)))
+    )

@@ -21,7 +21,8 @@
 
 A linked list is defined as either nil or a Pair whose cdr is a linked list.
 Linked lists are hashable. Note that it is possible to create an improper list
-by passing a non-list as the second argument to Pair.
+by passing a non-list as the second argument to Pair. Almost all functions in
+this module ignore the last cdr of a list and assume that it's nil.
 
 Linked lists are useful, because they can be built element-by-element in O(n).
 Tuples require O(n^2) due to having to copy the tuple with each new element.
@@ -42,59 +43,61 @@ def _normalizeIndex(size, i):
   return i + (size if i < 0 else 0)
 
 
+def _compareLists(a, b, compare):
+  """Compare two lists using compare to compare each item.
+
+  If one list is a prefix of the other, compare lengths instead.
+  """
+  for x, y in zip(a, b):
+    if x != y:
+      return compare(x, y)
+  return compare(len(a), len(b))
+
+
 class _List(
-    collections.abc.Collection, collections.abc.Hashable,
-    collections.abc.Reversible,
+    collections.abc.Hashable, collections.abc.Reversible, collections.abc.Sized,
 ):
   """The abstract base class for nil and Pair."""
 
   # TODO:
-  # Come up with a partitioning algorithm so we can get the reverse head at the
-  # same time we get the tail.
+  # Use splitAt to do some refactoring.
   # remove
   # sort
   # __str__
   __slots__ = ()
 
   @abc.abstractmethod
-  def __eq__(self, other):
-    pass
-
-  @abc.abstractmethod
-  def __lt__(self, other):
-    pass
-
-  @abc.abstractmethod
-  def __le__(self, other):
-    pass
-
-  @abc.abstractmethod
-  def __gt__(self, other):
-    pass
-
-  @abc.abstractmethod
-  def __ge__(self, other):
-    pass
-
-  @abc.abstractmethod
   def __repr__(self):
     pass
 
   def nodes(self):
-    """Return an iterator that yields each Pair in the linked list."""
+    """Return an iterator that yields each Pair in the linked list.
+
+    The StopIteration value is the last cdr, which is usually nil.
+    """
     while _isPair(self):
       yield self
       self = self.cdr
+    return self
 
   def __iter__(self):
     for node in self.nodes():
       yield node.car
 
-  def __contains__(self, item):
-    for x in self:
-      if x == item:
-        return True
-    return False
+  def __eq__(self, other):
+    return _compareLists(self, other, operator.eq)
+
+  def __lt__(self, other):
+    return _compareLists(self, other, operator.lt)
+
+  def __le__(self, other):
+    return _compareLists(self, other, operator.le)
+
+  def __gt__(self, other):
+    return _compareLists(self, other, operator.gt)
+
+  def __ge__(self, other):
+    return _compareLists(self, other, operator.ge)
 
   def __reversed__(self):
     return reversed(self)
@@ -106,7 +109,7 @@ class _List(
     self[i:].
     """
     for i, node in enumerate(self.nodes()):
-      if i == index:
+      if i >= index:
         return node
     return nil
 
@@ -190,6 +193,18 @@ class _List(
       lst = Pair(x, lst)
     return lst
 
+  def splitAt(self, index):
+    """Return a tuple containing the head and tail of the list, split at index.
+
+    The head is in reverse order.
+    """
+    head = nil
+    for i, node in enumerate(self.nodes()):
+      if i >= index:
+        return head, node
+      head = Pair(node.car, head)
+    return head, nil
+
   def setItem(self, key, value):
     """Return a copy of the list with the item at key changed to value.
 
@@ -246,29 +261,6 @@ class _NilType(_List):
   def __len__(self):
     return 0
 
-  def __eq__(self, other):
-    return _isNil(other)
-
-  def __lt__(self, other):
-    return (
-      False if _isNil(other)
-      else True if _isPair(other)
-      else NotImplemented
-    )
-
-  def __le__(self, other):
-    return True if isList(other) else NotImplemented
-
-  def __gt__(self, other):
-    return False if isList(other) else NotImplemented
-
-  def __ge__(self, other):
-    return (
-      True if _isNil(other)
-      else False if _isPair(other)
-      else NotImplemented
-    )
-
   def __hash__(self):
     return 0
 
@@ -278,10 +270,6 @@ class _NilType(_List):
 
 def _isNil(x):
   return x is nil
-
-
-def _comparePairs(a, b, f):
-  return f(a.car, b.car) if a.car != b.car else f(a.cdr, b.cdr)
 
 
 class Pair(_List):
@@ -297,33 +285,6 @@ class Pair(_List):
   def __len__(self):
     """Return the length of the list."""
     return self._len
-
-  def __eq__(self, other):
-    return (
-      False
-      if not _isPair(other) or self.car != other.car
-      else self.cdr == other.cdr
-    )
-
-  def __lt__(self, other):
-    return (
-      False if not _isPair(other) else _comparePairs(self, other, operator.lt)
-    )
-
-  def __le__(self, other):
-    return (
-      False if not _isPair(other) else _comparePairs(self, other, operator.le)
-    )
-
-  def __gt__(self, other):
-    return (
-      True if not _isPair(other) else _comparePairs(self, other, operator.gt)
-    )
-
-  def __ge__(self, other):
-    return (
-      True if not _isPair(other) else _comparePairs(self, other, operator.ge)
-    )
 
   def __hash__(self):
     return hash((self.car, self.cdr))

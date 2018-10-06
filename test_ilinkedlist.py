@@ -246,3 +246,6 @@ class TestPair:
     assert (
       ilinkedlist.new((1, 10, 2, 20, 3)).delItem(slice(1, 4, 2)) == basicList
     )
+
+  def test_insert(self):
+    assert basicList.insert(1, 40) == ilinkedlist.new((1, 40, 2, 3))

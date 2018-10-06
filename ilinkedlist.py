@@ -49,8 +49,8 @@ class _List(
   """The abstract base class for nil and Pair."""
 
   # TODO:
-  # delItem
-  # insert
+  # Come up with a partitioning algorithm so we can get the reverse head at the
+  # same time we get the tail.
   # remove
   # sort
   # __str__
@@ -102,8 +102,8 @@ class _List(
   def tail(self, index):
     """Return the list starting after the first index nodes.
 
-    If i is greater than the length of the list, return nil (actually the last
-    cdr). Equivalent to self[i:].
+    If i is greater than the length of the list, return nil. Equivalent to
+    self[i:].
     """
     for i, node in enumerate(self.nodes()):
       if i == index:
@@ -227,6 +227,10 @@ class _List(
         if i not in iRange
       ) + tail
     raise TypeError(f'Index must be int or slice, got {key}')
+
+  def insert(self, i, x):
+    """Return a copy of the list with x inserted after the i-th node."""
+    return itertools.islice(self, i) + Pair(x, self.tail(i))
 
 
 def isList(x):

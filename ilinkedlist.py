@@ -37,6 +37,11 @@ import operator
 __all__ = 'nil', 'Pair', 'new', 'reversed', 'isList'
 
 
+def _normalizeIndex(size, i):
+  """Convert i to a non-negative index."""
+  return i + (size if i < 0 else 0)
+
+
 class _List(
     collections.abc.Collection, collections.abc.Hashable,
     collections.abc.Reversible,
@@ -109,7 +114,7 @@ class _List(
     """Get the key-th element of the list."""
     size = len(self)
     if isinstance(key, int):
-      i = key + (size if key < 0 else 0)
+      i = _normalizeIndex(size, key)
       error = IndexError(f'Index out of range: {key}')
       if i < 0:
         raise error
@@ -191,7 +196,8 @@ class _List(
     key may be a slice object, in which case value must be iterable.
     """
     if isinstance(key, int):
-      return itertools.islice(self, key) + Pair(value, self.tail(key + 1))
+      i = _normalizeIndex(len(self), key)
+      return itertools.islice(self, i) + Pair(value, self.tail(i + 1))
     if isinstance(key, slice):
       tail = self.tail(key.stop)
       if key.step is None:
@@ -201,6 +207,24 @@ class _List(
       return (
         next(valueIter) if i in iRange else x
         for i, x in enumerate(itertools.islice(self, key.stop))
+      ) + tail
+    raise TypeError(f'Index must be int or slice, got {key}')
+
+  def delItem(self, key):
+    """Return a copy of the list without the indicated values."""
+    if isinstance(key, int):
+      i = _normalizeIndex(len(self), key)
+      return itertools.islice(self, i) + self.tail(i + 1)
+    if isinstance(key, slice):
+      tail = self.tail(key.stop)
+      if key.step is None:
+        return itertools.islice(self, key.start) + tail
+      iRange = range(key.start or 0, key.stop, key.step)
+      return (
+        x
+        for i, x
+        in enumerate(itertools.islice(self, key.stop))
+        if i not in iRange
       ) + tail
     raise TypeError(f'Index must be int or slice, got {key}')
 

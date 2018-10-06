@@ -237,7 +237,12 @@ class TestPair:
     )
 
   def test_delItem(self):
-    assert basicList.delItem(1) == ilinkedlist.new((0, 2))
+    assert basicList.delItem(1) == ilinkedlist.new((1, 3))
 
-  # delItemSlice
-  # delItemSliceStep
+  def test_delItemSlice(self):
+    assert ilinkedlist.new((1, 20, 30, 2, 3)).delItem(slice(1, 3)) == basicList
+
+  def test_delItemSliceStep(self):
+    assert (
+      ilinkedlist.new((1, 10, 2, 20, 3)).delItem(slice(1, 4, 2)) == basicList
+    )

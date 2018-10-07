@@ -60,7 +60,6 @@ class _List(
   """The abstract base class for nil and Pair."""
 
   # TODO:
-  # Use splitAt to do some refactoring.
   # remove
   # sort
   # __str__
@@ -170,10 +169,9 @@ class _List(
     instead of the index method of sequences, because for linked lists, it's
     more natural to refer to an item's position by node than by index.
     """
-    while _isPair(self):
-      if self.car == x:
-        return self
-      self = self.cdr
+    for node in self.nodes():
+      if node.car == x:
+        return node
 
   def count(self, x):
     """Return the number of times x is in the list."""
@@ -212,40 +210,52 @@ class _List(
     """
     if isinstance(key, int):
       i = _normalizeIndex(len(self), key)
-      return itertools.islice(self, i) + Pair(value, self.tail(i + 1))
+      head, main = self.splitAt(i)
+      return Pair(value, main.tail(1)).appendReverse(head)
     if isinstance(key, slice):
-      tail = self.tail(key.stop)
+      start = key.start or 0
+      size = key.stop - start
+      head, main = self.splitAt(start)
+      tail = main.tail(size)
       if key.step is None:
-        return itertools.islice(self, key.start) + (value + tail)
-      iRange = range(key.start or 0, key.stop, key.step)
+        return (value + tail).appendReverse(head)
       valueIter = iter(value)
+      iRange = range(0, size, key.step)
       return (
-        next(valueIter) if i in iRange else x
-        for i, x in enumerate(itertools.islice(self, key.stop))
-      ) + tail
+        (
+          next(valueIter) if i in iRange else x
+          for i, x in itertools.islice(enumerate(main), size)
+        ) + tail
+      ).appendReverse(head)
     raise TypeError(f'Index must be int or slice, got {key}')
 
   def delItem(self, key):
     """Return a copy of the list without the indicated values."""
     if isinstance(key, int):
       i = _normalizeIndex(len(self), key)
-      return itertools.islice(self, i) + self.tail(i + 1)
+      head, main = self.splitAt(i)
+      return main.tail(1).appendReverse(head)
     if isinstance(key, slice):
-      tail = self.tail(key.stop)
+      start = key.start or 0
+      size = key.stop - start
+      head, main = self.splitAt(start)
+      tail = main.tail(size)
       if key.step is None:
-        return itertools.islice(self, key.start) + tail
-      iRange = range(key.start or 0, key.stop, key.step)
+        return tail.appendReverse(head)
+      iRange = range(0, size, key.step)
       return (
-        x
-        for i, x
-        in enumerate(itertools.islice(self, key.stop))
-        if i not in iRange
-      ) + tail
+        (
+          x
+          for i, x in itertools.islice(enumerate(main), size)
+          if i not in iRange
+        ) + tail
+      ).appendReverse(head)
     raise TypeError(f'Index must be int or slice, got {key}')
 
   def insert(self, i, x):
-    """Return a copy of the list with x inserted after the i-th node."""
-    return itertools.islice(self, i) + Pair(x, self.tail(i))
+    """Return a copy of the list with x inserted after the i nodes."""
+    head, tail = self.splitAt(i)
+    return Pair(x, tail).appendReverse(head)
 
 
 def isList(x):

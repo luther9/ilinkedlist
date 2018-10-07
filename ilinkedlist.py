@@ -35,7 +35,7 @@ import collections
 import itertools
 import operator
 
-__all__ = 'nil', 'Pair', 'new', 'reversed', 'isList'
+__all__ = 'nil', 'Pair', 'new', 'reverse', 'isList'
 
 
 def _normalizeIndex(size, i):
@@ -60,7 +60,6 @@ class _List(
   """The abstract base class for nil and Pair."""
 
   # TODO:
-  # remove
   # sort
   # __str__
   __slots__ = ()
@@ -99,7 +98,7 @@ class _List(
     return _compareLists(self, other, operator.ge)
 
   def __reversed__(self):
-    return reversed(self)
+    return reverse(self)
 
   def tail(self, index):
     """Return the list starting after the first index nodes.
@@ -145,11 +144,11 @@ class _List(
 
   def __add__(self, other):
     """Concatenate two linked lists."""
-    return other.appendReverse(reversed(self))
+    return other.appendReverse(reverse(self))
 
   def __radd__(self, other):
     """Concatenate a non-linked list to a linked list. Return a linked list."""
-    return self.appendReverse(reversed(other))
+    return self.appendReverse(reverse(other))
 
   def __mul__(self, n):
     if n <= 0:
@@ -257,6 +256,14 @@ class _List(
     head, tail = self.splitAt(i)
     return Pair(x, tail).appendReverse(head)
 
+  def remove(self, x):
+    head = nil
+    for node in self.nodes():
+      if node.car == x:
+        return node.cdr.appendReverse(head)
+      head = Pair(node.car, head)
+    raise ValueError(f'{x} not in {self}')
+
 
 def isList(x):
   """Return True if x is nil or a Pair, otherwise False."""
@@ -308,7 +315,7 @@ def _isPair(x):
   return isinstance(x, Pair)
 
 
-def reversed(iterable):
+def reverse(iterable):
   """Reverse iterable and turn it into a linked list.
 
   This function is faster than new if you don't want to preserve order.
@@ -318,7 +325,7 @@ def reversed(iterable):
 
 def new(iterable):
   """Build a linked list from iterable."""
-  return reversed(reversed(iterable))
+  return reverse(reverse(iterable))
 
 
 # The empty linked list.

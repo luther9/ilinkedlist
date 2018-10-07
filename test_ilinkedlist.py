@@ -33,8 +33,8 @@ def test_new():
   assert tuple(basicList) == (1, 2, 3, 4)
 
 
-def test_reversed():
-  assert tuple(ilinkedlist.reversed((0, 1, 2))) == (2, 1, 0)
+def test_reverse():
+  assert tuple(ilinkedlist.reverse((0, 1, 2))) == (2, 1, 0)
 
 
 def test_isList():
@@ -262,3 +262,8 @@ class TestPair:
     assert (
       basicList.splitAt(2) == (ilinkedlist.new((2, 1)), ilinkedlist.new((3, 4)))
     )
+
+  def test_remove(self):
+    assert basicList.remove(3) == ilinkedlist.new((1, 2, 4))
+    with pytest.raises(ValueError):
+      basicList.remove(10)

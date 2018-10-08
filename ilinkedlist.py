@@ -59,8 +59,6 @@ class _List(
 ):
   """The abstract base class for nil and Pair."""
 
-  # TODO:
-  # __str__
   __slots__ = ()
 
   @abc.abstractmethod
@@ -251,7 +249,7 @@ class _List(
     raise TypeError(f'Index must be int or slice, got {key}')
 
   def insert(self, i, x):
-    """Return a copy of the list with x inserted after the i nodes."""
+    """Return a copy of the list with x inserted after i nodes."""
     head, tail = self.splitAt(i)
     return Pair(x, tail).appendReverse(head)
 

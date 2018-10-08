@@ -60,7 +60,6 @@ class _List(
   """The abstract base class for nil and Pair."""
 
   # TODO:
-  # sort
   # __str__
   __slots__ = ()
 
@@ -257,12 +256,19 @@ class _List(
     return Pair(x, tail).appendReverse(head)
 
   def remove(self, x):
+    """Return a copy of the list without the first instance of x."""
     head = nil
     for node in self.nodes():
       if node.car == x:
         return node.cdr.appendReverse(head)
       head = Pair(node.car, head)
     raise ValueError(f'{x} not in {self}')
+
+  def sort(self, key=None, reverse=False):
+    """Return a sorted version of the list."""
+    # We can't use appendReverse here, because that would make the sort
+    # unstable.
+    return new(sorted(self, key=key, reverse=reverse))
 
 
 def isList(x):

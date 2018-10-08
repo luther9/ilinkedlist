@@ -267,3 +267,6 @@ class TestPair:
     assert basicList.remove(3) == ilinkedlist.new((1, 2, 4))
     with pytest.raises(ValueError):
       basicList.remove(10)
+
+  def test_sort(self):
+    assert ilinkedlist.new((4, 1, 3, 2)).sort() == basicList

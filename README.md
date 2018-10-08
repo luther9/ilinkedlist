@@ -1,10 +1,10 @@
 # `ilinkedlist`
 
 This module is an implementation of immutable linked lists. A linked list is
-defined as either nil or a Pair whose cdr is a linked list. Linked lists are
-hashable. Note that it is possible to create an improper list by passing a
-non-list as the second argument to Pair. Almost all functions in this module
-ignore the last cdr of a list and assume that it's nil.
+defined as either `nil` or a `Pair` whose `cdr` is a linked list. Linked lists
+are hashable. Note that it is possible to create an improper list by passing a
+non-list as the second argument to `Pair`. Almost all functions in this module
+ignore the last `cdr` of a list and assume that it's `nil`.
 
 Linked lists are useful, because they can be built element-by-element in O(n).
 Tuples require O(n^2) due to having to copy the tuple with each new element.
@@ -118,7 +118,7 @@ position by node than by index.
 
 ## `ll.nodes()`
 
-Return an iterator that yields each `Pair` in `ll`. The StopIteration value is
+Return an iterator that yields each `Pair` in `ll`. The `StopIteration` value is
 the last `cdr`, which is usually `nil`.
 
 ## `ll.remove(x)`

@@ -99,6 +99,12 @@ class TestNil:
     """nil is hashable."""
     assert hash(ilinkedlist.nil) == 0
 
+  def test_repr(self):
+    assert repr(ilinkedlist.nil) == 'nil'
+
+  def test_str(self):
+    assert str(ilinkedlist.nil) == 'nil'
+
 
 class TestPair:
 
@@ -270,3 +276,9 @@ class TestPair:
 
   def test_sort(self):
     assert ilinkedlist.new((4, 1, 3, 2)).sort() == basicList
+
+  def test_repr(self):
+    assert repr(basicList) == 'new((1, 2, 3, 4,))'
+
+  def test_str(self):
+    assert str(basicList) == '(1 2 3 4)'

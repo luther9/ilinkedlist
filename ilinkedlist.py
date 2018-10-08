@@ -313,8 +313,12 @@ class Pair(_List):
     return hash((self.car, self.cdr))
 
   def __repr__(self):
-    lst = ', '.join(repr(x) for x in self)
-    return f'new({lst})'
+    lst = ' '.join(repr(x) + ',' for x in self)
+    return f'new(({lst}))'
+
+  def __str__(self):
+    lst = ' '.join(str(x) for x in self)
+    return f'({lst})'
 
 
 def _isPair(x):

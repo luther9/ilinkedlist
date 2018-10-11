@@ -18,7 +18,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 # TODO:
-# Implement features, one at a time, in both nil and Pair.
+# _List.pop
 
 import pytest
 

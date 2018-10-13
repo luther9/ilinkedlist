@@ -21,5 +21,5 @@ setuptools.setup(
   # WARNING: This parameter is undocumented, but it's the only way I can get
   # the module to install properly. Note that the 'packages' parameter only
   # works for packages, not modules.
-  py_modules=('compdescriptors',),
+  py_modules=('ilinkedlist',),
 )

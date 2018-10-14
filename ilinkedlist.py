@@ -30,8 +30,9 @@ Traditional Python lists require O(n*log(n)), because some new elements will
 trigger a memory reallocation (and therefore a copy).
 """
 
-import abc
-import collections
+# Import each thing as a single, non-colliding name.
+from abc import abstractmethod
+import collections.abc as abc
 import itertools
 import operator
 
@@ -54,14 +55,12 @@ def _compareLists(a, b, compare):
   return compare(len(a), len(b))
 
 
-class _List(
-    collections.abc.Hashable, collections.abc.Reversible, collections.abc.Sized,
-):
+class _List(abc.Hashable, abc.Reversible, abc.Sized):
   """The abstract base class for nil and Pair."""
 
   __slots__ = ()
 
-  @abc.abstractmethod
+  @abstractmethod
   def __repr__(self):
     pass
 

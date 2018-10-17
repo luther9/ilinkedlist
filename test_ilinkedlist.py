@@ -282,3 +282,7 @@ class TestPair:
 
   def test_str(self):
     assert str(basicList) == '(1 2 3 4)'
+
+  def test_pop(self):
+    assert basicList.pop() == (1, ilinkedlist.new((2, 3, 4)))
+    assert basicList.pop(2) == (3, ilinkedlist.new((1, 2, 4)))

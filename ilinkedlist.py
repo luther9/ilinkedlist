@@ -267,6 +267,16 @@ class _List(abc.Hashable, abc.Reversible, abc.Sized):
     # unstable.
     return new(sorted(self, key=key, reverse=reverse))
 
+  def pop(self, i=0):
+    """Return element i and the list without that element.
+
+    Return a 2-element tuple containing, respectively, the element at index `i`
+    and a copy of `ll` with that element removed. The default value of `i` is
+    `0`, unlike the default argument of `list.pop`.
+    """
+    head, tail = self.splitAt(i)
+    return tail.car, tail.cdr.appendReverse(head)
+
 
 def isList(x):
   """Return True if x is nil or a Pair, otherwise False."""

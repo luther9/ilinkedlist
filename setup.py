@@ -4,7 +4,7 @@ import setuptools
 
 setuptools.setup(
   name='ilinkedlist',
-  version='0.0.1',
+  version='0.1.0',
   description='An immutable linked list library.',
   long_description='This is an implementation of immutable linked lists. It contains `nil` (the empty linked list) and a `Pair` class for nodes.',
   url='https://github.com/luther9/ilinkedlist-py',
@@ -18,8 +18,7 @@ setuptools.setup(
   ],
   python_requires='~= 3.6',
 
-  # WARNING: This parameter is undocumented, but it's the only way I can get
-  # the module to install properly. Note that the 'packages' parameter only
-  # works for packages, not modules.
   py_modules=('ilinkedlist',),
+
+  keywords='linkedlist immutable functional',
 )

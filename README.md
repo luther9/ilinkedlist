@@ -121,7 +121,7 @@ position by node than by index.
 Return an iterator that yields each `Pair` in `ll`. The `StopIteration` value is
 the last `cdr`, which is usually `nil`.
 
-## 'll.pop([i])`
+## `ll.pop([i])`
 
 Return a 2-element tuple containing, respectively, the element at index `i` and
 a copy of `ll` with that element removed. The default value of `i` is `0`,

@@ -34,6 +34,7 @@ trigger a memory reallocation (and therefore a copy).
 from abc import abstractmethod
 import collections.abc as abc
 import itertools
+import functools
 import operator
 
 __all__ = 'nil', 'Pair', 'new', 'reverse', 'isList'
@@ -134,9 +135,7 @@ class _List(abc.Hashable, abc.Reversible, abc.Sized):
 
     Return the resulting list. Faster than concatenation.
     """
-    for x in head:
-      self = Pair(x, self)
-    return self
+    return functools.reduce(lambda lst, x: Pair(x, lst), head, self)
 
   def __add__(self, other):
     """Concatenate two linked lists."""

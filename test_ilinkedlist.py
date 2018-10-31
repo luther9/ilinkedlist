@@ -264,9 +264,10 @@ class TestPair:
   def test_insert(self):
     assert basicList.insert(1, 40) == ilinkedlist.new((1, 40, 2, 3, 4))
 
-  def test_splitAt(self):
+  def test_splitAtFast(self):
     assert (
-      basicList.splitAt(2) == (ilinkedlist.new((2, 1)), ilinkedlist.new((3, 4)))
+      basicList.splitAtFast(2)
+      == (ilinkedlist.new((2, 1)), ilinkedlist.new((3, 4)))
     )
 
   def test_remove(self):

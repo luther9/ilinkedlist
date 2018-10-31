@@ -34,6 +34,7 @@ trigger a memory reallocation (and therefore a copy).
 from abc import abstractmethod
 import collections.abc as abc
 import itertools
+import functools
 import operator
 
 __all__ = 'nil', 'Pair', 'new', 'reverse', 'isList'
@@ -134,9 +135,7 @@ class _List(abc.Hashable, abc.Reversible, abc.Sized):
 
     Return the resulting list. Faster than concatenation.
     """
-    for x in head:
-      self = Pair(x, self)
-    return self
+    return functools.reduce(lambda lst, x: Pair(x, lst), head, self)
 
   def __add__(self, other):
     """Concatenate two linked lists."""
@@ -186,7 +185,7 @@ class _List(abc.Hashable, abc.Reversible, abc.Sized):
       lst = Pair(x, lst)
     return lst
 
-  def splitAt(self, index):
+  def splitAtFast(self, index):
     """Return a tuple containing the head and tail of the list, split at index.
 
     The head is in reverse order.
@@ -205,12 +204,12 @@ class _List(abc.Hashable, abc.Reversible, abc.Sized):
     """
     if isinstance(key, int):
       i = _normalizeIndex(len(self), key)
-      head, main = self.splitAt(i)
+      head, main = self.splitAtFast(i)
       return Pair(value, main.tail(1)).appendReverse(head)
     if isinstance(key, slice):
       start = key.start or 0
       size = key.stop - start
-      head, main = self.splitAt(start)
+      head, main = self.splitAtFast(start)
       tail = main.tail(size)
       if key.step is None:
         return (value + tail).appendReverse(head)
@@ -228,12 +227,12 @@ class _List(abc.Hashable, abc.Reversible, abc.Sized):
     """Return a copy of the list without the indicated values."""
     if isinstance(key, int):
       i = _normalizeIndex(len(self), key)
-      head, main = self.splitAt(i)
+      head, main = self.splitAtFast(i)
       return main.tail(1).appendReverse(head)
     if isinstance(key, slice):
       start = key.start or 0
       size = key.stop - start
-      head, main = self.splitAt(start)
+      head, main = self.splitAtFast(start)
       tail = main.tail(size)
       if key.step is None:
         return tail.appendReverse(head)
@@ -249,7 +248,7 @@ class _List(abc.Hashable, abc.Reversible, abc.Sized):
 
   def insert(self, i, x):
     """Return a copy of the list with x inserted after i nodes."""
-    head, tail = self.splitAt(i)
+    head, tail = self.splitAtFast(i)
     return Pair(x, tail).appendReverse(head)
 
   def remove(self, x):
@@ -274,7 +273,7 @@ class _List(abc.Hashable, abc.Reversible, abc.Sized):
     and a copy of `ll` with that element removed. The default value of `i` is
     `0`, unlike the default argument of `list.pop`.
     """
-    head, tail = self.splitAt(i)
+    head, tail = self.splitAtFast(i)
     return tail.car, tail.cdr.appendReverse(head)
 
 

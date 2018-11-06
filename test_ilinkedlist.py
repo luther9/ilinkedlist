@@ -18,7 +18,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 # TODO:
-# _List.pop
+# multicons
 
 import pytest
 
@@ -287,3 +287,8 @@ class TestPair:
   def test_pop(self):
     assert basicList.pop() == (1, ilinkedlist.new((2, 3, 4)))
     assert basicList.pop(2) == (3, ilinkedlist.new((1, 2, 4)))
+
+  def test_splitAt(self):
+    assert (
+      basicList.splitAt(2) == (ilinkedlist.new((1, 2)), ilinkedlist.new((3, 4)))
+    )

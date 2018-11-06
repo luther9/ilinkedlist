@@ -197,6 +197,11 @@ class _List(abc.Hashable, abc.Reversible, abc.Sized):
       head = Pair(node.car, head)
     return head, nil
 
+  def splitAt(self, index):
+    """Return a tuple of two sublists of `ll`, partitioned at `index`."""
+    head, tail = self.splitAtFast(index)
+    return reverse(head), tail
+
   def setItem(self, key, value):
     """Return a copy of the list with the item at key changed to value.
 

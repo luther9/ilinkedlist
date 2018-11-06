@@ -141,6 +141,10 @@ may be a `slice`, in which case `value` must be iterable.
 Return a sorted version of `ll`. The keyword arguments are the same as with the
 `sorted` builtin.
 
+## `ll.splitAt(index)`
+
+Return a tuple of two sublists of `ll`, partitioned at `index`.
+
 ## `ll.splitAtFast(index)`
 
 Equivalent to `(ll.headReverse(index), ll.tail(index))`, but faster.

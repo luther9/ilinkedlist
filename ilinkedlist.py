@@ -65,7 +65,7 @@ class _List(abc.Hashable, abc.Reversible, abc.Sized):
   def __repr__(self):
     pass
 
-  def nodes(self):
+  def pairs(self):
     """Return an iterator that yields each Pair in the linked list.
 
     The StopIteration value is the last cdr, which is usually nil.
@@ -76,7 +76,7 @@ class _List(abc.Hashable, abc.Reversible, abc.Sized):
     return self
 
   def __iter__(self):
-    for node in self.nodes():
+    for node in self.pairs():
       yield node.car
 
   def __eq__(self, other):
@@ -98,12 +98,12 @@ class _List(abc.Hashable, abc.Reversible, abc.Sized):
     return reverse(self)
 
   def tail(self, index):
-    """Return the list starting after the first index nodes.
+    """Return the list starting after the first index pairs.
 
     If i is greater than the length of the list, return nil. Equivalent to
     self[i:].
     """
-    for i, node in enumerate(self.nodes()):
+    for i, node in enumerate(self.pairs()):
       if i >= index:
         return node
     return nil
@@ -163,7 +163,7 @@ class _List(abc.Hashable, abc.Reversible, abc.Sized):
     instead of the index method of sequences, because for linked lists, it's
     more natural to refer to an item's position by node than by index.
     """
-    for node in self.nodes():
+    for node in self.pairs():
       if node.car == x:
         return node
 
@@ -191,7 +191,7 @@ class _List(abc.Hashable, abc.Reversible, abc.Sized):
     The head is in reverse order.
     """
     head = nil
-    for i, node in enumerate(self.nodes()):
+    for i, node in enumerate(self.pairs()):
       if i >= index:
         return head, node
       head = Pair(node.car, head)
@@ -252,14 +252,14 @@ class _List(abc.Hashable, abc.Reversible, abc.Sized):
     raise TypeError(f'Index must be int or slice, got {key}')
 
   def insert(self, i, x):
-    """Return a copy of the list with x inserted after i nodes."""
+    """Return a copy of the list with x inserted after i pairs."""
     head, tail = self.splitAtFast(i)
     return Pair(x, tail).appendReverse(head)
 
   def remove(self, x):
     """Return a copy of the list without the first instance of x."""
     head = nil
-    for node in self.nodes():
+    for node in self.pairs():
       if node.car == x:
         return node.cdr.appendReverse(head)
       head = Pair(node.car, head)

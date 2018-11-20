@@ -209,8 +209,8 @@ class TestPair:
   def test_member(self):
     assert ilinkedlist.new((-1, 0, 1, 2, 3, 4)).member(1) == basicList
 
-  def test_nodes(self):
-    it = basicList.nodes()
+  def test_pairs(self):
+    it = basicList.pairs()
     assert next(it) == basicList
     assert next(it) == ilinkedlist.new((2, 3, 4))
     assert next(it) == ilinkedlist.new((3, 4))

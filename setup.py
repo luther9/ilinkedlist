@@ -1,10 +1,10 @@
-#!/usr/bin/python3.6
+#!/usr/bin/python3
 
 import setuptools
 
 setuptools.setup(
   name='ilinkedlist',
-  version='0.2.0',
+  version='0.4.0',
   description='An immutable linked list library.',
   long_description='This is an implementation of immutable linked lists. It contains `nil` (the empty linked list) and a `Pair` class for nodes.',
   url='https://github.com/luther9/ilinkedlist-py',

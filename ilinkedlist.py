@@ -126,7 +126,7 @@ class _List(abc.Hashable, abc.Reversible, abc.Sized):
       return (
         self.tail(s[0])
         if s[1] >= size and s[2] == 1
-        else new(itertools.islice(self, key.start, key.stop, key.step))
+        else new(itertools.islice(self, *s))
       )
     raise TypeError(f'Index must be int or slice, got {key}')
 

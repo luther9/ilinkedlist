@@ -17,9 +17,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-# TODO:
-# multicons
-
 import pytest
 
 import ilinkedlist
@@ -156,6 +153,10 @@ class TestPair:
   def test_getitemSlice(self):
     """Slicing works."""
     assert basicList[0:2] == ilinkedlist.new((1, 2))
+
+  def test_getitemSliceNegative(self):
+    """Slicing works with negative numbers."""
+    assert basicList[:-1] == ilinkedlist.new((1, 2, 3))
 
   def test_getitemSliceOutOfRange(self):
     """Out of range slice returns nil."""

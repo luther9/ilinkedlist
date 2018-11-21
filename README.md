@@ -109,14 +109,17 @@ Return a linked list of the first `n` items in reverse order.
 
 Return a copy of `ll` with `x` inserted after `index` nodes.
 
-## `ll.member(x)`
+## `ll.member(x[, eq])`
 
-Return the first sublist whose `car` equals `x`. If `x` is not in the list,
-return `None` (not `nil`). We provide this method instead of the `index` method
+Return the first sublist where `eq(x, element)` is true, where `element` is the
+`car` of that sublist. If no qualifying element is found, return `None` (not
+`nil`). The default value of `eq` is the equality operator.
+
+We provide this method instead of the `index` method
 of sequences, because for linked lists, it's more natural to refer to an item's
 position by node than by index.
 
-## `ll.nodes()`
+## `ll.pairs()`
 
 Return an iterator that yields each `Pair` in `ll`. The `StopIteration` value is
 the last `cdr`, which is usually `nil`.

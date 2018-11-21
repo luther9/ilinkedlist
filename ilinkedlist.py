@@ -156,15 +156,15 @@ class _List(abc.Hashable, abc.Reversible, abc.Sized):
   def __rmul__(self, n):
     return self * n
 
-  def member(self, x):
-    """Return the first sublist whose car equals x.
+  def member(self, x, eq=operator.eq):
+    """Return the first sublist where eq(x, sublist.car) is true.
 
-    If x is not in the list, return None (not nil). We provide this method
-    instead of the index method of sequences, because for linked lists, it's
-    more natural to refer to an item's position by node than by index.
+    If no qualifying element is found, return None (not nil). We provide this
+    method instead of the index method of sequences, because for linked lists,
+    it's more natural to refer to an item's position by node than by index.
     """
     for node in self.pairs():
-      if node.car == x:
+      if eq(x, node.car):
         return node
 
   def count(self, x):

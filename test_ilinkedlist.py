@@ -17,6 +17,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+# TODO:
+# Consider adding functions from
+# https://www.gnu.org/software/guile/manual/html_node/SRFI_002d1.html.
+
 import pytest
 
 import ilinkedlist
@@ -208,6 +212,11 @@ class TestPair:
 
   def test_member(self):
     assert ilinkedlist.new((-1, 0, 1, 2, 3, 4)).member(1) == basicList
+
+  def test_memberEq(self):
+    assert (
+      basicList.member(2, lambda x, elem: x < elem) == ilinkedlist.new((3, 4))
+    )
 
   def test_pairs(self):
     it = basicList.pairs()
